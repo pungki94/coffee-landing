@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Bliss | Premium Coffee Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .coffee-bg {
+            background-color: #4B2E0E;
+        }
+        
+        .coffee-light {
+            background-color: #6F4E37;
+        }
+        
+        .hero-pattern {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234B2E0E"/><path d="M0 0L100 100" stroke="%236F4E37" stroke-width="2"/><path d="M100 0L0 100" stroke="%236F4E37" stroke-width="2"/></svg>');
+        }
+        
+        .coffee-card {
+            transition: all 0.3s ease;
+        }
+        
+        .coffee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(107, 70, 43, 0.4);
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #fff;
+            transition: width 0.3s;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        .active-nav::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-[#4B2E0E]">
+    <!-- Navigation -->
+    <nav class="coffee-bg text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold">Coffee Bliss</span>
+            </div>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="nav-item active-nav" data-page="home">Home</a>
+                <a href="#" class="nav-item" data-page="about">About</a>
+                <a href="#" class="nav-item" data-page="shop">Shop</a>
+                <a href="#" class="nav-item" data-page="contact">Contact</a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button class="p-2 rounded-full bg-amber-600 hover:bg-amber-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </button>
+                <button class="md:hidden" id="mobile-menu-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden mt-4 pb-2" id="mobile-menu">
+            <div class="flex flex-col space-y-3 px-2">
+                <a href="#" class="nav-item active-nav py-2 px-4 rounded bg-brown-900" data-page="home">Home</a>
+                <a href="#" class="nav-item py-2 px-4 rounded" data-page="about">About</a>
+                <a href="#" class="nav-item py-2 px-4 rounded" data-page="shop">Shop</a>
+                <a href="#" class="nav-item py-2 px-4 rounded" data-page="contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main id="page-content">
+        <!-- Home Page -->
+        <section id="home-page" class="page active">
+            <!-- Hero Section -->
+            <div class="hero-pattern text-white py-20 px-4">
+                <div class="container mx-auto max-w-4xl text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">Start Your Day With Perfect Coffee</h1>
+                    <p class="text-xl mb-10 max-w-2xl mx-auto">Discover the finest coffee beans from around the world, carefully roasted to perfection for your brewing pleasure.</p>
+                    <button class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-full transition">
+                        Explore Our Blends
+                    </button>
+                </div>
+            </div>
+
+            <!-- Featured Products -->
+            <div class="py-16 px-4">
+                <div class="container mx-auto">
+                    <h2 class="text-3xl font-bold text-center mb-12">Our Featured Coffees</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Coffee Card 1 -->
+                        <div class="coffee-card bg-white rounded-lg overflow-hidden shadow-md">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fb03d6f4-3755-4f93-98f7-e3cce8c182e8.png" alt="Ethiopian Yirgacheffe coffee bag with rich dark roast beans" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2">Ethiopian Yirgacheffe</h3>
+                                <p class="text-gray-700 mb-4">Bright and floral with notes of citrus and berry. A delicate and complex single-origin coffee.</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-lg">$14.99</span>
+                                    <button class="coffee-light text-white py-2 px-4 rounded hover:bg-amber-700 transition">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Coffee Card 2 -->
+                        <div class="coffee-card bg-white rounded-lg overflow-hidden shadow-md">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/45dfe40a-fe62-4cb2-a91b-f1f772de2a15.png" alt="Colombian Supremo coffee package with premium beans" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2">Colombian Supremo</h3>
+                                <p class="text-gray-700 mb-4">Well-balanced with caramel sweetness and nutty undertones. A classic crowd-pleaser.</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-lg">$12.99</span>
+                                    <button class="coffee-light text-white py-2 px-4 rounded hover:bg-amber-700 transition">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Coffee Card 3 -->
+                        <div class="coffee-card bg-white rounded-lg overflow-hidden shadow-md">
+                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1b791844-69c4-4991-9c10-96cf263bc627.png" alt="Sumatra Mandheling dark roast coffee in premium packaging" class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2">Sumatra Mandheling</h3>
+                                <p class="text-gray-700 mb-4">Full-bodied and earthy with low acidity. Features notes of dark chocolate and spice.</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-lg">$15.99</span>
+                                    <button class="coffee-light text-white py-2 px-4 rounded hover:bg-amber-700 transition">Add to Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brewing Guide -->
+            <div class="coffee-light text-white py-16 px-4">
+                <div class="container mx-auto max-w-4xl text-center">
+                    <h2 class="text-3xl font-bold mb-6">The Art of Brewing</h2>
+                    <p class="text-lg mb-10">Learn how to brew the perfect cup of coffee with our expert guides and premium equipment.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                        <div class="bg-white text-[#4B2E0E] p-6 rounded-lg">
+                            <div class="text-4xl mb-4">1</div>
+                            <h3 class="font-bold text-xl mb-2">Choose Your Beans</h3>
+                            <p>Select from our premium single-origin or blended coffee beans.</p>
+                        </div>
+                        <div class="bg-white text-[#4B2E0E] p-6 rounded-lg">
+                            <div class="text-4xl mb-4">2</div>
+                            <h3 class="font-bold text-xl mb-2">Grind to Perfection</h3>
+                            <p>Grind your beans according to your preferred brewing method.</p>
+                        </div>
+                        <div class="bg-white text-[#4B2E0E] p-6 rounded-lg">
+                            <div class="text-4xl mb-4">3</div>
+                            <h3 class="font-bold text-xl mb-2">Brew & Enjoy</h3>
+                            <p>Use the right water temperature and brew time for optimal flavor.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="about-page" class="page hidden">
+            <div class="container mx-auto py-12 px-4">
+                <h1 class="text-4xl font-bold text-center mb-12">Our Story</h1>
+                
+                <div class="flex flex-col md:flex-row items-center gap-10 mb-16">
+                    <div class="md:w-1/2">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6e812386-bd30-41cb-8cb7-0ea0d759dfe4.png" alt="Artisan coffee roasting process in a modern facility" class="rounded-lg shadow-md">
+                    </div>
+                    <div class="md:w-1/2">
+                        <h2 class="text-3xl font-bold mb-6">From Bean to Cup</h2>
+                        <p class="mb-4">Founded in 2010, Coffee Bliss began as a small roastery with a passion for exceptional coffee. Our journey started with a simple mission: to source the finest coffee beans from sustainable farms and roast them to perfection.</p>
+                        <p>Today, we work directly with farmers across the coffee-growing regions of Latin America, Africa, and Asia to bring you unique, flavorful coffees that tell a story with every sip.</p>
+                    </div>
+                </div>
+                
+                <div class="bg-amber-100 rounded-lg p-8 mb-16">
+                    <h2 class="text-3xl font-bold text-center mb-8">Our Values</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="coffee-light text-white text-2xl w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold text-xl mb-2">Sustainability</h3>
+                            <p>We prioritize environmentally friendly practices and support sustainable farming methods.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="coffee-light text-white text-2xl w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold text-xl mb-2">Quality</h3>
+                            <p>Every batch is carefully roasted to highlight the unique characteristics of each bean.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="coffee-light text-white text-2xl w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold text-xl mb-2">Community</h3>
+                            <p>We believe in building relationships with both our farmers and coffee enthusiasts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop Page -->
+        <section id="shop-page" class="page hidden">
+            <div class="container mx-auto py-12 px-4">
+                <h1 class="text-4xl font-bold text-center mb-8">Our Coffee Selection</h1>
+                
+                <div class="flex flex-wrap gap-4 justify-center mb-12">
+                    <button class="coffee-light text-white px-4 py-2 rounded">All Products</button>
+                    <button class="bg-white coffee-light-text px-4 py-2 rounded border border-amber-800">Single Origin</button>
+                    <button class="bg-white coffee-light-text px-4 py-2 rounded border border-amber-800">Blends</button>
+                    <button class="bg-white coffee-light-text px-4 py-2 rounded border border-amber-800">Decaf</button>
+                    <button class="bg-white coffee-light-text px-4 py-2 rounded border border-amber-800">Equipment</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Product 1 -->
+                    <div class="coffee-card bg-white rounded-lg overflow-hidden shadow-md">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cb53f77f-3460-413b-a5d2-cf606c16cf6a.png" alt="Guatemalan Antigua coffee with rich aroma and flavor notes" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Guatemalan Antigua</h3>
+                            <p class="text-gray-700 text-sm mb-3"></p>
+                            <!-- Coffee Selection -->
+                            <span class="text-gray-700 text-sm mb-3 block">Smooth and complex with chocolate and spice notes.</span>
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-lg">$13.99</span>
+                                <button class="coffee-light text-white py-1 px-3 rounded text-sm hover:bg-amber-700 transition">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="coffee-card bg-white rounded-lg overflow-hidden shadow-md">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b3291879-597b-46be-bac0-e28bddcaaa6c.png" alt="Kenya AA premium coffee beans with bright acidity" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Kenya AA</h3>
+                            <p class="text-gray-700 text-sm mb-3">Bright acidity with berry and citrus notes.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-lg">$16.99</span>
+                                <button class="coffee-light text-white py-1 px-3 rounded text-sm hover:bg-amber-700 transition">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="coffee-card bg-white rounded-lg overflow-hidden shadow-md">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/757ee85a-39cb-4f05-b672-86c0c3b0ebe7.png" alt="Espresso Blend dark roast for perfect espresso shots" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Espresso Blend</h3>
+                            <p class="text-gray-700 text-sm mb-3">Bold and rich with caramel and nutty notes.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-lg">$14.99</span>
+                                <button class="coffee-light text-white py-1 px-3 rounded text-sm hover:bg-amber-700 transition">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 4 -->
+                    <div class="coffee-card bg-white rounded-lg overflow-hidden shadow-md">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8020900d-d8c2-48ba-9ad6-2768a2b940ae.png" alt="Decaf Colombian coffee without compromising on flavor" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-xl mb-2">Decaf Colombian</h3>
+                            <p class="text-gray-700 text-sm mb-3">Smooth and mild with chocolate notes.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-lg">$12.99</span>
+                                <button class="coffee-light text-white py-1 px-3 rounded text-sm hover:bg-amber-700 transition">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="contact-page" class="page hidden">
+            <div class="container mx-auto py-12 px-4">
+                <h1 class="text-4xl font-bold text-center mb-8">Get in Touch</h1>
+                
+                <div class="flex flex-col md:flex-row gap-10">
+                    <div class="md:w-1/2">
+                        <form class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Your name">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Your email">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="message">Message</label>
+                                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="message" rows="5" placeholder="Your message"></textarea>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <button class="coffee-light hover:bg-amber-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="md:w-1/2">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h2 class="text-2xl font-bold mb-4">Visit Us</h2>
+                            <p class="mb-4">123 Coffee Lane<br>Brewville, CO 12345</p>
+                            
+                            <h2 class="text-2xl font-bold mt-6 mb-4">Hours</h2>
+                            <p class="mb-2">Monday - Friday: 7am - 7pm</p>
+                            <p class="mb-2">Saturday: 8am - 8pm</p>
+                            <p class="mb-6">Sunday: 8am - 5pm</p>
+                            
+                            <h2 class="text-2xl font-bold mt-6 mb-4">Contact Info</h2>
+                            <p class="mb-2">Email: info@coffeebliss.com</p>
+                            <p>Phone: (123) 456-7890</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="coffee-bg text-white py-12 px-4 mt-16">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Coffee Bliss</h3>
+                    <p>Providing premium coffee experiences since 2010. Sourced sustainably, roasted with care.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline" data-page="home">Home</a></li>
+                        <li><a href="#" class="hover:underline" data-page="about">About Us</a></li>
+                        <li><a href="#" class="hover:underline" data-page="shop">Shop</a></li>
+                        <li><a href="#" class="hover:underline" data-page="contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Our Products</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:underline">Single Origin</a></li>
+                        <li><a href="#" class="hover:underline">Blends</a></li>
+                        <li><a href="#" class="hover:underline">Decaf Options</a></li>
+                        <li><a href="#" class="hover:underline">Brewing Equipment</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Newsletter</h3>
+                    <p class="mb-4">Subscribe for updates and exclusive offers</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l text-gray-800 w-full">
+                        <button class="coffee-light hover:bg-amber-700 px-4 py-2 rounded-r">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-amber-800 mt-12 pt-8 text-center">
+                <p>© 2023 Coffee Bliss. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active nav item
+                    navItems.forEach(navItem => {
+                        navItem.classList.remove('active-nav');
+                    });
+                    this.classList.add('active-nav');
+                    
+                    // Show the selected page
+                    const pageId = this.getAttribute('data-page') + '-page';
+                    pages.forEach(page => {
+                        page.classList.add('hidden');
+                        page.classList.remove('active');
+                    });
+                    document.getElementById(pageId).classList.remove('hidden');
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html> Login to continue using
