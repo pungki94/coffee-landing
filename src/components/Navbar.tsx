@@ -33,7 +33,8 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   // FIX: Remove berdasarkan cartId unik
   const handleRemove = (cartId: string) => {
@@ -46,7 +47,7 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
         
         {/* Logo */}
         <div className="flex items-center space-x-4">
-          <span className="text-2xl font-bold">Coffee Bliss</span>
+          <span className="text-xl sm:text-2xl font-bold">Coffee Bliss</span>
         </div>
 
         {/* Desktop Menu */}
@@ -84,16 +85,16 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                 />
               </svg>
 
-              {cart.length > 0 && (
+              {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {cart.length}
+                  {totalItems}
                 </span>
               )}
             </button>
 
             {/* Desktop Mini Cart */}
             {cartOpen && (
-              <div className="absolute right-0 mt-2 w-72 bg-white text-[#4B2E0E] shadow-lg rounded-lg p-4 z-50">
+              <div className="absolute right-0 top-full mt-2 w-72 bg-white text-[#4B2E0E] shadow-lg rounded-lg p-4 z-50 max-h-[80vh] overflow-y-auto">
                 {cart.length === 0 ? (
                   <p className="text-center py-4">Your cart is empty</p>
                 ) : (
@@ -104,18 +105,18 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                           key={item.cartId}
                           className="flex items-center py-2 justify-between"
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
                             <img
                               src={item.image}
                               alt={item.name}
-                              className="w-12 h-12 object-cover rounded"
+                              className="w-12 h-12 object-cover rounded flex-shrink-0"
                             />
-                            <span className="text-sm">{item.name}</span>
+                            <span className="text-sm truncate">{item.name} <span className="text-amber-700 font-semibold">(Qty: {item.quantity || 1})</span></span>
                           </div>
 
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-shrink-0">
                             <span className="font-bold text-sm">
-                              ${item.price.toFixed(2)}
+                              ${((item.price * (item.quantity || 1)).toFixed(2))}
                             </span>
 
                             <button
@@ -141,7 +142,7 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
         </div>
 
         {/* Mobile Buttons */}
-        <div className="flex md:hidden items-center space-x-4">
+        <div className="flex md:hidden items-center space-x-2 sm:space-x-4">
           {/* Cart Button */}
           <button
             onClick={toggleCart}
@@ -153,16 +154,16 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
 
-            {cart.length > 0 && (
+            {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                {cart.length}
+                {totalItems}
               </span>
             )}
           </button>
 
           {/* Mobile Cart */}
           {cartOpen && (
-            <div className="absolute right-0 mt-2 w-72 bg-white text-[#4B2E0E] shadow-lg rounded-lg p-4 z-50">
+            <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-72 bg-white text-[#4B2E0E] shadow-lg rounded-lg p-4 z-50">
               {cart.length === 0 ? (
                 <p className="text-center py-4">Your cart is empty</p>
               ) : (
@@ -173,18 +174,18 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                         key={item.cartId}
                         className="flex items-center py-2 justify-between"
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="w-12 h-12 object-cover rounded"
+                            className="w-12 h-12 object-cover rounded flex-shrink-0"
                           />
-                          <span className="text-sm">{item.name}</span>
+                          <span className="text-sm truncate">{item.name} <span className="text-amber-700 font-semibold">(Qty: {item.quantity || 1})</span></span>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-shrink-0">
                           <span className="font-bold text-sm">
-                            ${item.price.toFixed(2)}
+                            ${((item.price * (item.quantity || 1)).toFixed(2))}
                           </span>
                           <button
                             onClick={() => handleRemove(item.cartId!)}

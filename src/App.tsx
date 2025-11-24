@@ -16,6 +16,7 @@ export interface Product {
   description: string;
   category: string;
   cartId?: string; // untuk identitas unik item
+  quantity?: number; // quantity in cart
 }
 
 function App() {

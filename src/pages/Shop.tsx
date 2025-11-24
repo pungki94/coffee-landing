@@ -50,7 +50,28 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
       ? products
       : products.filter((p) => p.category === filter);
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  // Add to cart - check if product already exists, increment quantity if yes
+  const addToCart = (product: Product) => {
+    const existingItem = cart.find((item) => item.id === product.id);
+    
+    if (existingItem) {
+      // If item exists, increment quantity
+      setCart(
+        cart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
+            : item
+        )
+      );
+    } else {
+      // If item doesn't exist, add new item with quantity 1
+      const newItem = { ...product, cartId: crypto.randomUUID(), quantity: 1 };
+      setCart([...cart, newItem]);
+    }
+  };
 
   // Hapus item berdasarkan cartId unik
   const removeItem = (cartId: string) => {
@@ -60,16 +81,16 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
   return (
     <section className="page py-12 px-4 bg-amber-50 text-[#4B2E0E]">
       <div className="container mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8">
           Our Coffee Selection
         </h1>
 
-        <div className="flex flex-wrap gap-4 justify-center mb-12">
+        <div className="flex flex-wrap gap-2 sm:gap-4 justify-center mb-8 sm:mb-12">
           {["All Products", "Single Origin", "Blends", "Decaf"].map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-4 py-2 rounded transition font-medium ${
+              className={`px-3 sm:px-4 py-2 rounded transition font-medium text-sm sm:text-base ${
                 filter === cat
                   ? "bg-amber-700 text-white"
                   : "bg-white text-[#4B2E0E] hover:bg-amber-100"
@@ -106,20 +127,11 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
 
                   {/* ADD TO CART */}
                   <button
-  onClick={() => {
-    const newItem = { ...product, cartId: crypto.randomUUID() };
-    const newCart = [...cart, newItem];
-
-    // 👉 Tambahkan debug log DI SINI
-    console.log("=== DEBUG ITEM ===", newItem);
-    console.log("=== DEBUG CART ===", newCart);
-
-    setCart(newCart);
-  }}
-  className="bg-amber-700 text-white py-1 px-3 rounded text-sm hover:bg-amber-800 transition"
->
-  Add to Cart
-</button>
+                    onClick={() => addToCart(product)}
+                    className="bg-amber-700 text-white py-1 px-3 rounded text-sm hover:bg-amber-800 transition"
+                  >
+                    Add to Cart
+                  </button>
 
                 </div>
               </div>
@@ -129,7 +141,7 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
 
         {/* CART SUMMARY */}
         {cart.length > 0 && (
-          <div className="mt-12 p-6 bg-white rounded-lg shadow-md max-w-md mx-auto">
+          <div className="mt-8 sm:mt-12 p-4 sm:p-6 bg-white rounded-lg shadow-md max-w-md mx-auto">
             <h2 className="text-2xl font-bold mb-4">Cart Summary</h2>
 
             <ul className="mb-4">
@@ -138,8 +150,8 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
                   key={item.cartId}
                   className="flex justify-between items-center mb-2"
                 >
-                  <span>{item.name}</span>
-                  <span>${item.price.toFixed(2)}</span>
+                  <span>{item.name} <span className="text-amber-700 font-semibold">(Qty: {item.quantity || 1})</span></span>
+                  <span>${((item.price * (item.quantity || 1)).toFixed(2))}</span>
 
                   <button
                     onClick={() => removeItem(item.cartId!)}

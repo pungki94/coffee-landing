@@ -50,10 +50,10 @@ const About: React.FC = () => {
       className="page py-12 px-4 bg-amber-50 text-[#4B2E0E]"
     >
       <div className="container mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-12">Our Story</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12">Our Story</h1>
 
         {/* Our Story */}
-        <div className="flex flex-col md:flex-row items-center gap-10 mb-16">
+        <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 mb-12 sm:mb-16">
           <div className="md:w-1/2">
             <img
               ref={imageRef}
@@ -79,9 +79,9 @@ const About: React.FC = () => {
         </div>
 
         {/* Our Values */}
-        <div ref={valuesRef} className="bg-amber-100 rounded-lg p-8 mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Our Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div ref={valuesRef} className="bg-amber-100 rounded-lg p-6 sm:p-8 mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">Our Values</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             {/* Sustainability */}
             <div className="text-center">
               <div className="coffee-light text-white text-2xl w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-amber-600">

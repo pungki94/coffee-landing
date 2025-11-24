@@ -6,4 +6,5 @@ export interface Product {
   description: string;
   category: string;
   cartId?: string;
+  quantity?: number; // quantity in cart
 }
