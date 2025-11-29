@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import images from "../constants/coffeeImages";
 import { Product } from "../types/product";
 
+interface CartItem extends Product {
+  qty: number;
+}
+
 interface ShopProps {
-  cart: Product[];
-  setCart: React.Dispatch<React.SetStateAction<Product[]>>;
+  cart: CartItem[];
+  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
 const products: Product[] = [
@@ -50,29 +54,83 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
       ? products
       : products.filter((p) => p.category === filter);
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+  /** ADD TO CART (NO DUPLICATE) */
+  const addToCart = (product: Product) => {
+    setCart((prev) => {
+      const exists = prev.find((p) => p.id === product.id);
+      if (exists) {
+        return prev.map((p) =>
+          p.id === product.id ? { ...p, qty: p.qty + 1 } : p
+        );
+      }
+      return [...prev, { ...product, qty: 1 }];
+    });
+  };
 
-  // Hapus item berdasarkan cartId unik
-  const removeItem = (cartId: string) => {
-    setCart(cart.filter((item) => item.cartId !== cartId));
+  /** REDUCE QTY */
+  const reduceQty = (id: number) => {
+    setCart((prev) =>
+      prev
+        .map((p) => (p.id === id ? { ...p, qty: p.qty - 1 } : p))
+        .filter((p) => p.qty > 0)
+    );
+  };
+
+  /** REMOVE FULL ITEM */
+  const removeItem = (id: number) => {
+    setCart((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  /** CALC TOTAL */
+  const totalPrice = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+
+  /** SUBMIT TO GOOGLE SHEETS */
+  const handleBuy = async () => {
+    const payload = {
+      items: cart.map((item) => ({
+        name: item.name,
+        qty: item.qty,
+        price: item.price,
+        total: item.qty * item.price,
+      })),
+      totalPayment: totalPrice,
+    };
+
+    try {
+      await fetch("https://script.google.com/macros/s/AKfycbxU2G-5AD7IVwJnVPK8lCMQPY0325NAxQzhu339QkwCQf9CwmfQlxlradSG4Lqy5CyZ/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      alert("Order sent to Google Sheet!");
+    } catch (err) {
+      console.error(err);
+      alert("Error sending order!");
+    }
   };
 
   return (
     <section className="page py-12 px-4 bg-amber-50 text-[#4B2E0E]">
-      <div className="container mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8">
+      <div className="container mx-auto max-w-6xl">
+
+        <h1 className="text-4xl font-bold text-center mb-10">
           Our Coffee Selection
         </h1>
 
-        <div className="flex flex-wrap gap-4 justify-center mb-12">
+        {/* FILTER */}
+        <div className="flex flex-wrap gap-4 justify-center mb-10">
           {["All Products", "Single Origin", "Blends", "Decaf"].map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-4 py-2 rounded transition font-medium ${
+              className={`px-4 py-2 rounded font-medium transition ${
                 filter === cat
                   ? "bg-amber-700 text-white"
-                  : "bg-white text-[#4B2E0E] hover:bg-amber-100"
+                  : "bg-white text-[#4B2E0E] hover:bg-amber-200"
               }`}
             >
               {cat}
@@ -80,17 +138,17 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
           ))}
         </div>
 
-        {/* PRODUK GRID */}
+        {/* PRODUCT GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="bg-white text-[#4B2E0E] rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"
             >
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-52 object-cover"
               />
 
               <div className="p-4">
@@ -103,24 +161,12 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
                   <span className="font-bold text-lg">
                     ${product.price.toFixed(2)}
                   </span>
-
-                  {/* ADD TO CART */}
                   <button
-  onClick={() => {
-    const newItem = { ...product, cartId: crypto.randomUUID() };
-    const newCart = [...cart, newItem];
-
-    // 👉 Tambahkan debug log DI SINI
-    console.log("=== DEBUG ITEM ===", newItem);
-    console.log("=== DEBUG CART ===", newCart);
-
-    setCart(newCart);
-  }}
-  className="bg-amber-700 text-white py-1 px-3 rounded text-sm hover:bg-amber-800 transition"
->
-  Add to Cart
-</button>
-
+                    onClick={() => addToCart(product)}
+                    className="bg-amber-700 text-white px-3 py-1 rounded text-sm hover:bg-amber-800 transition"
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             </div>
@@ -129,32 +175,70 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
 
         {/* CART SUMMARY */}
         {cart.length > 0 && (
-          <div className="mt-12 p-6 bg-white rounded-lg shadow-md max-w-md mx-auto">
-            <h2 className="text-2xl font-bold mb-4">Cart Summary</h2>
+          <div className="mt-12 bg-white shadow-md rounded-lg p-4 max-w-lg mx-auto">
+            <h2 className="text-xl font-bold mb-4">Cart Summary</h2>
 
-            <ul className="mb-4">
-              {cart.map((item) => (
-                <li
-                  key={item.cartId}
-                  className="flex justify-between items-center mb-2"
-                >
-                  <span>{item.name}</span>
-                  <span>${item.price.toFixed(2)}</span>
+            {/* HEADER */}
+            <div className="grid grid-cols-[1fr_60px_70px_80px] text-xs font-semibold text-gray-600 pb-2 border-b">
+              <span>Item</span>
+              <span className="text-center">Qty</span>
+              <span className="text-center">Price</span>
+              <span className="text-right">Total Price</span>
+            </div>
+
+            {cart.map((item) => (
+              <div
+                key={item.id}
+                className="grid grid-cols-[1fr_60px_70px_80px] text-sm py-3 border-b last:border-0 items-center"
+              >
+                <span className="truncate">{item.name}</span>
+
+                <div className="flex justify-center gap-1">
+                  <button
+                    onClick={() => reduceQty(item.id)}
+                    className="px-2 text-xs bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    -
+                  </button>
+                  <span className="font-semibold">{item.qty}</span>
+                  <button
+                    onClick={() => addToCart(item)}
+                    className="px-2 text-xs bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <span className="text-center">${item.price.toFixed(2)}</span>
+
+                <div className="flex items-center justify-end gap-2">
+                  <span className="font-semibold">
+                    ${(item.price * item.qty).toFixed(2)}
+                  </span>
 
                   <button
-                    onClick={() => removeItem(item.cartId!)}
-                    className="text-red-600 hover:text-red-800 text-sm"
+                    onClick={() => removeItem(item.id)}
+                    className="text-xs text-red-600 hover:text-red-800"
                   >
-                    Remove
+                    ✕
                   </button>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </div>
+            ))}
 
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total:</span>
+            {/* TOTAL PAYMENT */}
+            <div className="flex justify-between font-bold text-lg mt-4">
+              <span>Total Payment</span>
               <span>${totalPrice.toFixed(2)}</span>
             </div>
+
+            {/* BUY BTN */}
+            <button
+              onClick={handleBuy}
+              className="mt-4 w-full bg-amber-700 text-white py-2 rounded-lg hover:bg-amber-800"
+            >
+              Buy
+            </button>
           </div>
         )}
       </div>

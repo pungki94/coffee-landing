@@ -87,7 +87,7 @@ export default function Footer() {
 
         {/* Footer Bottom */}
         <div className="border-t border-amber-800 mt-12 pt-8 text-center text-sm">
-          <p>© 2023 Coffee Bliss. All rights reserved.</p>
+          <p>Made with © 2025 PT Integrasi Performa Amanah (Grasfam). All Rights Reserved.</p>
         </div>
       </div>
     </footer>

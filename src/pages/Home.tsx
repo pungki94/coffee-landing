@@ -23,7 +23,7 @@ const coffeeVariants: CoffeeVariant[] = [
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto-slide every 5 seconds
+  // Auto slide
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) =>
@@ -46,12 +46,10 @@ const Home: React.FC = () => {
   return (
     <section id="home-page" className="page relative w-full">
 
-      {/* ======================== */}
-      {/*      HERO + CAROUSEL     */}
-      {/* ======================== */}
+      {/* ================= HERO ================= */}
       <div className="relative w-full h-[80vh] md:h-[90vh] bg-gradient-to-b from-amber-600 via-amber-500 to-amber-400 overflow-hidden">
 
-        {/* SLIDER */}
+        {/* SLIDER IMAGES */}
         <div
           className="absolute inset-0 flex transition-transform duration-1000 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -64,12 +62,11 @@ const Home: React.FC = () => {
                 className="w-full h-full object-contain md:object-cover filter saturate-150 brightness-90"
               />
 
-              {/* Overlay Title/Description */}
-              <div className="absolute bottom-10 md:bottom-16 w-full flex flex-col items-center text-center px-4">
-                <h3 className="text-3xl md:text-5xl font-bold text-white drop-shadow-xl mb-2 animate-fade-in">
+              <div className="absolute bottom-10 md:bottom-16 w-full text-center px-4">
+                <h3 className="text-3xl md:text-5xl font-bold text-white drop-shadow-xl mb-2">
                   {slide.name}
                 </h3>
-                <p className="text-white text-lg md:text-xl drop-shadow-md animate-fade-in delay-200">
+                <p className="text-lg md:text-xl text-white drop-shadow-md">
                   {slide.description}
                 </p>
               </div>
@@ -77,12 +74,12 @@ const Home: React.FC = () => {
           ))}
         </div>
 
-        {/* HERO TEXT (di atas, tidak menutupi gambar) */}
-        <div className="absolute top-10 md:top-16 w-full flex flex-col items-center text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-xl mb-4 animate-fade-up">
+        {/* STATIC TEXT (TIDAK BERGESER) */}
+        <div className="absolute top-10 md:top-16 w-full text-center px-4 z-30">
+          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-xl mb-4">
             Start Your Day With Perfect Coffee
           </h1>
-          <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-2xl mb-6 animate-fade-up delay-150">
+          <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-2xl mx-auto mb-6">
             Discover the finest coffee beans from around the world.
           </p>
           <button className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-full transition">
@@ -90,23 +87,39 @@ const Home: React.FC = () => {
           </button>
         </div>
 
-        {/* SLIDE BUTTONS */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-full shadow-lg transition z-20"
-        >
-          &#8592;
-        </button>
+        {/* CHEVRON DI TENGAH DI BAWAH EXPLORE BUTTON */}
+        <div className="absolute w-full flex justify-center gap-16 top-[56%] md:top-[58%] z-40">
 
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-full shadow-lg transition z-20"
-        >
-          &#8594;
-        </button>
+          <button
+            onClick={prevSlide}
+            className="
+              bg-black/30 hover:bg-black/50
+              text-white text-3xl
+              w-14 h-14
+              rounded-full
+              flex justify-center items-center
+              backdrop-blur-sm shadow-lg transition
+            "
+          >
+            ❮
+          </button>
+          <button
+            onClick={nextSlide}
+            className="
+              bg-black/30 hover:bg-black/50
+              text-white text-3xl
+              w-14 h-14
+              rounded-full
+              flex justify-center items-center
+              backdrop-blur-sm shadow-lg transition
+            "
+          >
+            ❯
+          </button>
+        </div>
 
-        {/* INDICATORS */}
-        <div className="absolute bottom-6 w-full flex justify-center space-x-2 z-20">
+        {/* DOT INDICATORS */}
+        <div className="absolute bottom-6 w-full flex justify-center gap-2 z-20">
           {coffeeVariants.map((_, index) => (
             <button
               key={index}
@@ -118,9 +131,8 @@ const Home: React.FC = () => {
           ))}
         </div>
       </div>
-      {/* ======================== */}
-      {/*     FEATURED PRODUCTS    */}
-      {/* ======================== */}
+
+      {/* ================= FEATURED SECTION ================= */}
       <div className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">
@@ -164,35 +176,6 @@ const Home: React.FC = () => {
               </p>
             </div>
 
-          </div>
-        </div>
-      </div>
-
-      {/* ======================== */}
-      {/*      BREWING GUIDE       */}
-      {/* ======================== */}
-      <div className="coffee-light text-white py-16 px-4 bg-amber-600">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold mb-6">The Art of Brewing</h2>
-          <p className="text-lg mb-10">
-            Learn how to brew the perfect cup of coffee with expert guides and premium tools.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <div>
-              <h3 className="font-bold text-lg mb-2">1. Choose Your Beans</h3>
-              <p>Select the right beans for your taste.</p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-lg mb-2">2. Grind Properly</h3>
-              <p>Different brew methods need different grind sizes.</p>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-lg mb-2">3. Brew with Care</h3>
-              <p>The perfect ratio, temperature, and timing matter.</p>
-            </div>
           </div>
         </div>
       </div>

@@ -57,7 +57,7 @@ const About: React.FC = () => {
           <div className="md:w-1/2">
             <img
               ref={imageRef}
-              src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6e812386-bd30-41cb-8cb7-0ea0d759dfe4.png"
+              src="src/assets/images/about.png"
               alt="Artisan coffee roasting process"
               className="rounded-lg shadow-md w-full"
             />
