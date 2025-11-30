@@ -64,12 +64,15 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
     };
 
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbxU2G-5AD7IVwJnVPK8lCMQPY0325NAxQzhu339QkwCQf9CwmfQlxlradSG4Lqy5CyZ/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbxU2G-5AD7IVwJnVPK8lCMQPY0325NAxQzhu339QkwCQf9CwmfQlxlradSG4Lqy5CyZ/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
       alert("Order sent to Google Sheet!");
     } catch (err) {
@@ -81,7 +84,6 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
   return (
     <nav className="coffee-bg text-white p-4 sticky top-0 z-[999] shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-
         <span className="text-2xl font-bold">Coffee Bliss</span>
 
         {/* DESKTOP MENU */}
@@ -98,7 +100,7 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
             </NavLink>
           ))}
 
-          {/* CART ICON (DESKTOP) */}
+          {/* CART ICON */}
           <button
             onClick={toggleCart}
             className="relative p-1.5 rounded-full bg-amber-600 hover:bg-amber-700"
@@ -115,10 +117,10 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 
-                1.707.707 1.707H17m0 
-                0a2 2 0 100 4 2 2 0 
-                000-4m-8 
-                2a2 2 0 11-4 0 2 2 0 014 0z"
+                  1.707.707 1.707H17m0 
+                  0a2 2 0 100 4 2 2 0 
+                  000-4m-8 
+                  2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
 
@@ -148,10 +150,10 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 
-                1.707.707 1.707H17m0 
-                0a2 2 0 100 4 2 2 0 
-                000-4m-8 
-                2a2 2 0 11-4 0 2 2 0 014 0z"
+                  1.707.707 1.707H17m0 
+                  0a2 2 0 100 4 2 2 0 
+                  000-4m-8 
+                  2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
 
@@ -180,20 +182,25 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
             <p className="text-center py-4">Your cart is empty</p>
           ) : (
             <>
-              <div className="grid grid-cols-[1fr_40px_60px_70px] text-xs font-semibold pb-2 border-b">
-                <span>Item</span>
+              {/* Header */}
+              <div className="grid grid-cols-[1fr_45px_70px_80px] text-[11px] font-semibold pb-2 border-b uppercase tracking-wide">
+                <span className="text-left">Item</span>
                 <span className="text-center">Qty</span>
                 <span className="text-center">Price</span>
-                <span className="text-center">Total Price</span>
+                <span className="text-center">Total</span>
               </div>
 
               {cart.map((item) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-[1fr_40px_60px_70px] items-center text-sm py-2 border-b"
+                  className="grid grid-cols-[1fr_45px_70px_80px] items-center text-sm py-2 border-b"
                 >
-                  <span className="truncate">{item.name}</span>
+                  {/* Item Name */}
+                  <span className="whitespace-pre-wrap break-words pr-2 text-left">
+                    {item.name}
+                  </span>
 
+                  {/* QTY */}
                   <div className="flex gap-1 items-center justify-center">
                     <button
                       onClick={() => reduceQty(item.id)}
@@ -210,8 +217,13 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                     </button>
                   </div>
 
-                  <span className="text-center">${item.price.toFixed(2)}</span>
-                  <span className="text-center font-bold">
+                  {/* Price */}
+                  <span className="text-center text-[#4B2E0E] font-medium">
+                    ${item.price.toFixed(2)}
+                  </span>
+
+                  {/* Total */}
+                  <span className="text-center font-bold text-amber-700">
                     {(item.qty * item.price).toFixed(2)}
                   </span>
                 </div>
