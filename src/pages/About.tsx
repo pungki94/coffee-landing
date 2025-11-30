@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import aboutImage from "../assets/images/about.png";
 
 const About: React.FC = () => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -57,11 +58,12 @@ const About: React.FC = () => {
           <div className="md:w-1/2">
             <img
               ref={imageRef}
-              src="src/assets/images/about.png"
+              src={aboutImage}  // ← hanya ini yang diganti
               alt="Artisan coffee roasting process"
               className="rounded-lg shadow-md w-full"
             />
           </div>
+
           <div ref={textRef} className="md:w-1/2">
             <h2 className="text-3xl font-bold mb-6">From Bean to Cup</h2>
             <p className="mb-4">
@@ -81,7 +83,9 @@ const About: React.FC = () => {
         {/* Our Values */}
         <div ref={valuesRef} className="bg-amber-100 rounded-lg p-8 mb-16">
           <h2 className="text-3xl font-bold text-center mb-8">Our Values</h2>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
             {/* Sustainability */}
             <div className="text-center">
               <div className="coffee-light text-white text-2xl w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-amber-600">
@@ -146,7 +150,7 @@ const About: React.FC = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0zm6 3a2 2 0 11-4 0zm-14 0a2 2 0 11-4 0"
                   />
                 </svg>
               </div>
@@ -156,10 +160,12 @@ const About: React.FC = () => {
                 coffee enthusiasts.
               </p>
             </div>
+
           </div>
         </div>
       </div>
     </section>
   );
 };
+
 export default About;
