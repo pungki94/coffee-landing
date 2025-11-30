@@ -1,5 +1,8 @@
 import React, { useRef, useEffect } from "react";
+<<<<<<< HEAD
 import aboutImage from "../assets/images/about.png";
+=======
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
 
 const About: React.FC = () => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -51,6 +54,7 @@ const About: React.FC = () => {
       className="page py-12 px-4 bg-amber-50 text-[#4B2E0E]"
     >
       <div className="container mx-auto">
+<<<<<<< HEAD
         <h1 className="text-4xl font-bold text-center mb-12">Our Story</h1>
 
         {/* Our Story */}
@@ -59,11 +63,24 @@ const About: React.FC = () => {
             <img
               ref={imageRef}
               src={aboutImage}  // ← hanya ini yang diganti
+=======
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12">Our Story</h1>
+
+        {/* Our Story */}
+        <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-10 mb-12 sm:mb-16">
+          <div className="md:w-1/2">
+            <img
+              ref={imageRef}
+              src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6e812386-bd30-41cb-8cb7-0ea0d759dfe4.png"
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
               alt="Artisan coffee roasting process"
               className="rounded-lg shadow-md w-full"
             />
           </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
           <div ref={textRef} className="md:w-1/2">
             <h2 className="text-3xl font-bold mb-6">From Bean to Cup</h2>
             <p className="mb-4">
@@ -81,11 +98,17 @@ const About: React.FC = () => {
         </div>
 
         {/* Our Values */}
+<<<<<<< HEAD
         <div ref={valuesRef} className="bg-amber-100 rounded-lg p-8 mb-16">
           <h2 className="text-3xl font-bold text-center mb-8">Our Values</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
+=======
+        <div ref={valuesRef} className="bg-amber-100 rounded-lg p-6 sm:p-8 mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">Our Values</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
             {/* Sustainability */}
             <div className="text-center">
               <div className="coffee-light text-white text-2xl w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-amber-600">
@@ -150,7 +173,11 @@ const About: React.FC = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
+<<<<<<< HEAD
                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0zm6 3a2 2 0 11-4 0zm-14 0a2 2 0 11-4 0"
+=======
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
                   />
                 </svg>
               </div>
@@ -160,12 +187,18 @@ const About: React.FC = () => {
                 coffee enthusiasts.
               </p>
             </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
           </div>
         </div>
       </div>
     </section>
   );
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
 export default About;

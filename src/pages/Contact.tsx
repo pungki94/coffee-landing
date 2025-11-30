@@ -32,16 +32,27 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
       id="contact-page"
       className="page py-12 px-4 bg-amber-50 text-[#4B2E0E]"
     >
+<<<<<<< HEAD
       <div className="container mx-auto py-12 px-4">
         <h1 className="text-4xl font-bold text-center mb-8">Get in Touch</h1>
 
         <div className="flex flex-col md:flex-row gap-10">
+=======
+      <div className="container mx-auto py-8 sm:py-12 px-4">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8">Get in Touch</h1>
+
+        <div className="flex flex-col md:flex-row gap-6 md:gap-10">
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
           {/* === Form Section === */}
           <div className="md:w-1/2">
             <form
               ref={form}
               onSubmit={sendEmail}
+<<<<<<< HEAD
               className="bg-white p-6 rounded-lg shadow-md"
+=======
+              className="bg-white p-4 sm:p-6 rounded-lg shadow-md"
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
             >
               <div className="mb-4">
                 <label
@@ -112,6 +123,7 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
 
           {/* === Info Section === */}
           <div className="md:w-1/2">
+<<<<<<< HEAD
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-bold mb-4">Visit Us</h2>
               <p className="mb-4">
@@ -128,6 +140,47 @@ const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
               <h2 className="text-2xl font-bold mt-6 mb-4">Contact Info</h2>
               <p className="mb-2">Email: info@coffeebliss.com</p>
               <p>Phone: (123) 456-7890</p>
+=======
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4">Visit Us</h2>
+              <p className="mb-4">
+                <a 
+                  href="https://www.grasfam.com/aboutme#top" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-amber-700 hover:text-amber-800 hover:underline transition-colors text-sm sm:text-base"
+                >
+                  View Our Location & Details
+                </a>
+              </p>
+
+              <h2 className="text-xl sm:text-2xl font-bold mt-6 mb-4">Hours</h2>
+              <p className="mb-2 text-sm sm:text-base">Monday - Friday: 7am - 7pm</p>
+              <p className="mb-2 text-sm sm:text-base">Saturday: 8am - 8pm</p>
+              <p className="mb-6 text-sm sm:text-base">Sunday: 8am - 5pm</p>
+
+              <h2 className="text-xl sm:text-2xl font-bold mt-6 mb-4">Contact Info</h2>
+              <p className="mb-2 text-sm sm:text-base">
+                <a 
+                  href="https://www.grasfam.com/aboutme#top" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-amber-700 hover:text-amber-800 hover:underline transition-colors"
+                >
+                  Get in Touch
+                </a>
+              </p>
+              <p className="text-sm sm:text-base">
+                <a 
+                  href="https://www.grasfam.com/aboutme#top" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-amber-700 hover:text-amber-800 hover:underline transition-colors"
+                >
+                  More Information
+                </a>
+              </p>
+>>>>>>> 2509f1dc97d16622bd5719d630f1c5704fd47247
             </div>
           </div>
         </div>

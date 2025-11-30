@@ -97,14 +97,17 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
     };
 
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbxU2G-5AD7IVwJnVPK8lCMQPY0325NAxQzhu339QkwCQf9CwmfQlxlradSG4Lqy5CyZ/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbxU2G-5AD7IVwJnVPK8lCMQPY0325NAxQzhu339QkwCQf9CwmfQlxlradSG4Lqy5CyZ/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       alert("Order sent to Google Sheet!");
     } catch (err) {
@@ -116,7 +119,6 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
   return (
     <section className="page py-12 px-4 bg-amber-50 text-[#4B2E0E]">
       <div className="container mx-auto max-w-6xl">
-
         <h1 className="text-4xl font-bold text-center mb-10">
           Our Coffee Selection
         </h1>
@@ -209,7 +211,9 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
                   </button>
                 </div>
 
-                <span className="text-center">${item.price.toFixed(2)}</span>
+                <span className="text-center">
+                  ${item.price.toFixed(2)}
+                </span>
 
                 <div className="flex items-center justify-end gap-2">
                   <span className="font-semibold">
