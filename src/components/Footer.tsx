@@ -46,24 +46,36 @@ export default function Footer() {
             <h3 className="text-xl font-bold mb-4">Our Products</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:underline">
+                <NavLink
+                  to="/shop?category=Single%20Origin"
+                  className="hover:underline"
+                >
                   Single Origin
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <NavLink
+                  to="/shop?category=Blends"
+                  className="hover:underline"
+                >
                   Blends
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <NavLink
+                  to="/shop?category=Decaf"
+                  className="hover:underline"
+                >
                   Decaf Options
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <NavLink
+                  to="/about#roasting-process"
+                  className="hover:underline"
+                >
                   Brewing Equipment
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -71,7 +83,9 @@ export default function Footer() {
           {/* Newsletter */}
           <div>
             <h3 className="text-xl font-bold mb-4">Newsletter</h3>
-            <p className="mb-4">Subscribe for updates and exclusive offers</p>
+            <p className="mb-4">
+              Subscribe for updates and exclusive offers
+            </p>
             <div className="flex">
               <input
                 type="email"
@@ -87,7 +101,10 @@ export default function Footer() {
 
         {/* Footer Bottom */}
         <div className="border-t border-amber-800 mt-12 pt-8 text-center text-sm">
-          <p>Made with © 2025 PT Integrasi Performa Amanah (Grasfam). All Rights Reserved.</p>
+          <p>
+            Made with <span className="text-amber-700">❤️</span>© 2025 PT
+            Integrasi Performa Amanah (Grasfam). All Rights Reserved.
+          </p>
         </div>
       </div>
     </footer>

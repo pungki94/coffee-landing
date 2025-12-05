@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import images from "../constants/coffeeImages";
 import { CoffeeVariant } from "../types/CoffeeVariant";
 
@@ -47,7 +48,7 @@ const Home: React.FC = () => {
     <section id="home-page" className="page relative w-full">
 
       {/* ================= HERO ================= */}
-      <div className="relative w-full h-[80vh] md:h-[90vh] bg-gradient-to-b from-amber-600 via-amber-500 to-amber-400 overflow-hidden">
+      <div className="relative w-full h-[50vh] md:h-[90vh] overflow-hidden bg-black">
 
         {/* SLIDER IMAGES */}
         <div
@@ -59,7 +60,7 @@ const Home: React.FC = () => {
               <img
                 src={slide.image}
                 alt={slide.name}
-                className="w-full h-full object-contain md:object-cover filter saturate-150 brightness-90"
+                className="w-full h-full object-cover"
               />
 
               <div className="absolute bottom-10 md:bottom-16 w-full text-center px-4">
@@ -74,59 +75,61 @@ const Home: React.FC = () => {
           ))}
         </div>
 
-        {/* STATIC TEXT (TIDAK BERGESER) */}
-        <div className="absolute top-10 md:top-16 w-full text-center px-4 z-30">
+        {/* STATIC TEXT (CENTER) */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-30">
           <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-xl mb-4">
             Start Your Day With Perfect Coffee
           </h1>
-          <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-2xl mx-auto mb-6">
+          <p className="text-xl md:text-2xl text-white drop-shadow-md max-w-2xl mx-auto mb-10 md:mb-32">
             Discover the finest coffee beans from around the world.
           </p>
-          <button className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-full transition">
+
+          <Link to="/shop" className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transition inline-block">
             Explore Our Blends
-          </button>
+          </Link>
         </div>
 
-        {/* CHEVRON DI TENGAH DI BAWAH EXPLORE BUTTON */}
-        <div className="absolute w-full flex justify-center gap-16 top-[56%] md:top-[58%] z-40">
-
+        {/* CHEVRON BUTTONS */}
+        <div className="absolute inset-0 flex items-center justify-between px-4 md:px-40 z-40 pointer-events-none">
           <button
             onClick={prevSlide}
             className="
-              bg-black/30 hover:bg-black/50
+              pointer-events-auto
+              bg-black/40 hover:bg-black/60
               text-white text-3xl
-              w-14 h-14
-              rounded-full
-              flex justify-center items-center
-              backdrop-blur-sm shadow-lg transition
+              w-12 h-12 md:w-14 md:h-14
+              rounded-full flex items-center justify-center
+              backdrop-blur-sm shadow-lg
+              transition
             "
           >
             ❮
           </button>
+
           <button
             onClick={nextSlide}
             className="
-              bg-black/30 hover:bg-black/50
+              pointer-events-auto
+              bg-black/40 hover:bg-black/60
               text-white text-3xl
-              w-14 h-14
-              rounded-full
-              flex justify-center items-center
-              backdrop-blur-sm shadow-lg transition
+              w-12 h-12 md:w-14 md:h-14
+              rounded-full flex items-center justify-center
+              backdrop-blur-sm shadow-lg
+              transition
             "
           >
             ❯
           </button>
         </div>
 
-        {/* DOT INDICATORS */}
+        {/* DOTS */}
         <div className="absolute bottom-6 w-full flex justify-center gap-2 z-20">
           {coffeeVariants.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === currentSlide ? "bg-white scale-125" : "bg-gray-400"
-              }`}
+              className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? "bg-white scale-125" : "bg-gray-400"
+                }`}
             />
           ))}
         </div>
@@ -151,7 +154,7 @@ const Home: React.FC = () => {
               </ul>
             </div>
 
-            {/* SPECIAL BLENDS */}
+            {/* BLENDS */}
             <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
               <h3 className="text-xl font-bold mb-4">Special Blends</h3>
               <ul className="space-y-2 text-gray-700">
@@ -161,7 +164,7 @@ const Home: React.FC = () => {
               </ul>
             </div>
 
-            {/* POPULAR PICKS */}
+            {/* POPULAR */}
             <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
               <h3 className="text-xl font-bold mb-4">Popular Picks</h3>
               <div className="flex items-center justify-between mb-2">

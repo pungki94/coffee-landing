@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 export default function Header() {
   return (
-    <nav className="coffee-bg text-white p-4 sticky top-0 z-50 shadow-md">
+    <nav className="coffee-bg text-white p-4 fixed top-0 left-0 w-full z-50 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
@@ -94,8 +94,7 @@ export default function Header() {
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `nav-item py-2 px-4 rounded ${
-                isActive ? "active-nav bg-brown-900" : ""
+              `nav-item py-2 px-4 rounded ${isActive ? "active-nav bg-brown-900" : ""
               }`
             }
           >
@@ -104,8 +103,7 @@ export default function Header() {
           <NavLink
             to="/about"
             className={({ isActive }) =>
-              `nav-item py-2 px-4 rounded ${
-                isActive ? "active-nav bg-brown-900" : ""
+              `nav-item py-2 px-4 rounded ${isActive ? "active-nav bg-brown-900" : ""
               }`
             }
           >
@@ -114,8 +112,7 @@ export default function Header() {
           <NavLink
             to="/shop"
             className={({ isActive }) =>
-              `nav-item py-2 px-4 rounded ${
-                isActive ? "active-nav bg-brown-900" : ""
+              `nav-item py-2 px-4 rounded ${isActive ? "active-nav bg-brown-900" : ""
               }`
             }
           >
@@ -124,8 +121,7 @@ export default function Header() {
           <NavLink
             to="/contact"
             className={({ isActive }) =>
-              `nav-item py-2 px-4 rounded ${
-                isActive ? "active-nav bg-brown-900" : ""
+              `nav-item py-2 px-4 rounded ${isActive ? "active-nav bg-brown-900" : ""
               }`
             }
           >

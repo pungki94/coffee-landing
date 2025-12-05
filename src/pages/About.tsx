@@ -1,10 +1,12 @@
 import React, { useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import aboutImage from "../assets/images/about.png";
 
 const About: React.FC = () => {
   const imageRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const valuesRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   useEffect(() => {
     // Animasi fade-in untuk image
@@ -29,7 +31,7 @@ const About: React.FC = () => {
       }, 100);
     }
 
-    // Animasi fade-in + scale untuk values
+    // Fade-in values cards
     if (valuesRef.current) {
       const children = valuesRef.current.children;
       Array.from(children).forEach((child, i) => {
@@ -45,6 +47,12 @@ const About: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (location.hash === "#roasting-process" && imageRef.current) {
+      imageRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [location]);
+
   return (
     <section
       id="about-page"
@@ -57,8 +65,9 @@ const About: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-10 mb-16">
           <div className="md:w-1/2">
             <img
+              id="roasting-process"
               ref={imageRef}
-              src={aboutImage}  // ← hanya ini yang diganti
+              src={aboutImage}
               alt="Artisan coffee roasting process"
               className="rounded-lg shadow-md w-full"
             />
@@ -66,16 +75,29 @@ const About: React.FC = () => {
 
           <div ref={textRef} className="md:w-1/2">
             <h2 className="text-3xl font-bold mb-6">From Bean to Cup</h2>
+
             <p className="mb-4">
-              Founded in 2010, Coffee Bliss began as a small roastery with a
-              passion for exceptional coffee. Our journey started with a simple
-              mission: to source the finest coffee beans from sustainable farms
-              and roast them to perfection.
+              Founded in 2010, Coffee Bliss began as a small roastery driven by a
+              passion for exceptional coffee. What started as a humble experiment
+              in a rented garage quickly turned into a lifelong mission: to honor
+              the origins of every bean and deliver a drinking experience that
+              celebrates craftsmanship.
             </p>
+
+            <p className="mb-4">
+              We partner directly with family-owned farms across Latin America,
+              Africa, and Asia — not through large corporate brokers. This allows
+              us to pay ethical wages, support sustainable agriculture, and
+              maintain transparency in how each batch is grown, harvested, and
+              processed. Every bean we roast carries a story of place, people,
+              and pride.
+            </p>
+
             <p>
-              Today, we work directly with farmers across Latin America, Africa,
-              and Asia to bring you unique, flavorful coffees that tell a story
-              with every sip.
+              From selecting raw green beans, to hand-roasting in small batches,
+              to the final brew in your cup, we treat each step with care. Our goal
+              is simple: a cup of coffee that awakens the senses, comforts the
+              soul, and reminds you why every moment — big or small — matters.
             </p>
           </div>
         </div>
