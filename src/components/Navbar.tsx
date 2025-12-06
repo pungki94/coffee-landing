@@ -23,19 +23,37 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
   const [cartOpen, setCartOpen] = useState(false);
 
   const cartRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
 
   const toggleMobile = () => setMobileOpen((v) => !v);
   const toggleCart = () => setCartOpen((v) => !v);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
+      // Close Cart if clicked outside
       if (cartRef.current && !cartRef.current.contains(e.target as Node)) {
+        // Also ensure not clicking the toggle button itself if it was separate, 
+        // but here the logic is simple. The user asked for "mobile sidebar", so focusing on that.
+        // (Actually, the cart toggle logic might be slightly buggy if the toggle button is outside the ref, 
+        // but I shouldn't change existing behavior unless necessary. The user asked ONLY for mobile sidebar fix.)
         setCartOpen(false);
+      }
+
+      // Close Mobile Menu if clicked outside
+      if (
+        mobileOpen &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(e.target as Node) &&
+        hamburgerButtonRef.current &&
+        !hamburgerButtonRef.current.contains(e.target as Node)
+      ) {
+        setMobileOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  }, [mobileOpen]);
 
   const addQty = (id: number) =>
     setCart((prev) =>
@@ -199,6 +217,7 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
 
             {/* HAMBURGER */}
             <button
+              ref={hamburgerButtonRef}
               onClick={toggleMobile}
               className="p-2 text-white text-xl"
             >
@@ -283,7 +302,7 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
 
         {/* MOBILE MENU */}
         {mobileOpen && (
-          <div className="md:hidden bg-[#4B2E0E] rounded-lg mt-2 p-4 space-y-2">
+          <div ref={mobileMenuRef} className="md:hidden bg-[#4B2E0E] rounded-lg mt-2 p-4 space-y-2">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
