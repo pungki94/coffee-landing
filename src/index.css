@@ -2,55 +2,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-        html, body {
-            overscroll-behavior-y: none;
-        }
 
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .coffee-bg {
-            background-color: #4B2E0E;
-        }
-        
-        .coffee-light {
-            background-color: #6F4E37;
-        }
-        
-        .hero-pattern {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234B2E0E"/><path d="M0 0L100 100" stroke="%236F4E37" stroke-width="2"/><path d="M100 0L0 100" stroke="%236F4E37" stroke-width="2"/></svg>');
-        }
-        
-        .coffee-card {
-            transition: all 0.3s ease;
-        }
-        
-        .coffee-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(107, 70, 43, 0.4);
-        }
-        
-        .nav-item {
-            position: relative;
-        }
-        
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #fff;
-            transition: width 0.3s;
-        }
-        
-        .nav-item:hover::after {
-            width: 100%;
-        }
-        
-        .active-nav::after {
-            width: 100%;
-        }
-   
+/* html, body {
+    overscroll-behavior-y: none;  Removed to enable mobile pull-to-refresh
+} */
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.coffee-bg {
+    background-color: #4B2E0E;
+}
+
+.coffee-light {
+    background-color: #6F4E37;
+}
+
+.hero-pattern {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234B2E0E"/><path d="M0 0L100 100" stroke="%236F4E37" stroke-width="2"/><path d="M100 0L0 100" stroke="%236F4E37" stroke-width="2"/></svg>');
+}
+
+.coffee-card {
+    transition: all 0.3s ease;
+}
+
+.coffee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(107, 70, 43, 0.4);
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #fff;
+    transition: width 0.3s;
+}
+
+.nav-item:hover::after {
+    width: 100%;
+}
+
+.active-nav::after {
+    width: 100%;
+}
