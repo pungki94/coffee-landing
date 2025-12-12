@@ -129,7 +129,7 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
           </div>
         )}
         {/* HEADER CONTAINER */}
-        <div className="w-full flex justify-between items-center h-16 md:h-20">
+        <div className="w-full max-w-7xl mx-auto flex justify-between items-center h-16 md:h-20">
           {/* LOGO */}
           <span className="text-2xl md:text-4xl font-bold tracking-wide leading-tight">
             Coffee Bliss
