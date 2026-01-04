@@ -14,7 +14,7 @@ const About: React.FC = () => {
       imageRef.current.style.opacity = "0";
       imageRef.current.style.transform = "translateY(20px)";
       setTimeout(() => {
-        imageRef.current!.style.transition = "all 0.8s ease-out";
+        imageRef.current!.style.transition = "all 0.4s ease-out";
         imageRef.current!.style.opacity = "1";
         imageRef.current!.style.transform = "translateY(0)";
       }, 100);
@@ -25,7 +25,7 @@ const About: React.FC = () => {
       textRef.current.style.opacity = "0";
       textRef.current.style.transform = "translateY(20px)";
       setTimeout(() => {
-        textRef.current!.style.transition = "all 0.8s ease-out 0.2s";
+        textRef.current!.style.transition = "all 0.4s ease-out 0.2s";
         textRef.current!.style.opacity = "1";
         textRef.current!.style.transform = "translateY(0)";
       }, 100);
@@ -39,7 +39,7 @@ const About: React.FC = () => {
         el.style.opacity = "0";
         el.style.transform = "translateY(20px) scale(0.9)";
         setTimeout(() => {
-          el.style.transition = `all 0.8s ease-out ${0.3 + i * 0.2}s`;
+          el.style.transition = `all 0.4s ease-out ${0.3 + i * 0.2}s`;
           el.style.opacity = "1";
           el.style.transform = "translateY(0) scale(1)";
         }, 100);

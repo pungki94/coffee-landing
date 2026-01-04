@@ -157,6 +157,14 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
   // Fetch products from spreadsheet
   useEffect(() => {
     fetchProducts();
+
+    const handleRefresh = () => {
+      console.log("Shop refresh triggered...");
+      fetchProducts(true);
+    };
+
+    window.addEventListener('refresh-data', handleRefresh);
+    return () => window.removeEventListener('refresh-data', handleRefresh);
   }, []);
 
   // ... (rest of code)
@@ -176,7 +184,7 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
       if (element) {
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 300);
+        }, 100);
       }
     } else {
       window.scrollTo(0, 0);
@@ -242,7 +250,7 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
       );
       setSuccessMsg("Order sent to Google Sheet!");
       setCart([]); // Optional: clear cart on success
-      setTimeout(() => setSuccessMsg(""), 3000);
+      setTimeout(() => setSuccessMsg(""), 1500);
     } catch (err) {
       console.error(err);
       alert("Error sending order!");

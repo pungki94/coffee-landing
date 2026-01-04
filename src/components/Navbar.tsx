@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Product } from "../types/product";
 import { fetchMenuFromSpreadsheet, MenuItem } from "../services/spreadsheetService";
 
@@ -24,6 +24,7 @@ const defaultMenu: MenuItem[] = [
 
 export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: NavbarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenu);
@@ -33,9 +34,9 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
 
   // Fetch menu from spreadsheet
-  useEffect(() => {
-    const loadMenu = async () => {
-      // Try to load from localStorage first
+  const loadMenu = async (force: boolean = false) => {
+    // Try to load from localStorage first
+    if (!force) {
       const cachedMenu = localStorage.getItem('navbar_menu');
       const cacheTimestamp = localStorage.getItem('navbar_menu_timestamp');
 
@@ -52,41 +53,85 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
           console.error("Error parsing cached menu:", e);
         }
       }
+    }
 
-      // Fetch from spreadsheet in background (always, to keep cache fresh)
-      try {
-        const data = await fetchMenuFromSpreadsheet();
-        if (data.length > 0) {
-          setMenuItems(data);
-          // Update cache
-          localStorage.setItem('navbar_menu', JSON.stringify(data));
-          localStorage.setItem('navbar_menu_timestamp', Date.now().toString());
-        } else if (!cachedMenu) {
-          // Only use default menu if no cache and no data from spreadsheet
-          setMenuItems(defaultMenu);
-        }
-      } catch (error) {
-        console.error("Error loading menu:", error);
-        if (!cachedMenu) {
-          // Only use default menu if no cache available
-          setMenuItems(defaultMenu);
-        }
+    // Fetch from spreadsheet in background (always, to keep cache fresh)
+    try {
+      const data = await fetchMenuFromSpreadsheet();
+      if (data.length > 0) {
+        setMenuItems(data);
+        // Update cache
+        localStorage.setItem('navbar_menu', JSON.stringify(data));
+        localStorage.setItem('navbar_menu_timestamp', Date.now().toString());
+      } else if (!force) {
+        // Only use default menu if no cache and no data from spreadsheet
+        const cachedMenu = localStorage.getItem('navbar_menu');
+        if (!cachedMenu) setMenuItems(defaultMenu);
       }
-    };
+    } catch (error) {
+      console.error("Error loading menu:", error);
+      const cachedMenu = localStorage.getItem('navbar_menu');
+      if (!cachedMenu && !force) {
+        // Only use default menu if no cache available
+        setMenuItems(defaultMenu);
+      }
+    }
+  };
+
+  useEffect(() => {
     loadMenu();
+
+    // Listen for global refresh event
+    const handleRefresh = () => {
+      console.log("Global refresh triggered - reloading menu...");
+      loadMenu(true);
+    };
+
+    window.addEventListener('refresh-data', handleRefresh);
+    return () => window.removeEventListener('refresh-data', handleRefresh);
   }, []);
 
   const toggleMobile = () => setMobileOpen((v) => !v);
   const toggleCart = () => setCartOpen((v) => !v);
 
+  // Helper to normalize path (remove trailing slash and base path)
+  const normalizePath = (p: string) => {
+    let path = p;
+    // Strip base path if present (handle both with and without trailing slash)
+    const basePath = '/coffee-landing';
+    if (path.startsWith(basePath)) {
+      path = path.substring(basePath.length);
+    }
+    // Ensure it starts with / if it became empty or didn't have one (though unlikely after stripping base)
+    if (!path.startsWith('/')) {
+      path = '/' + path;
+    }
+    // Remove trailing slash if length > 1
+    if (path.endsWith('/') && path.length > 1) {
+      path = path.slice(0, -1);
+    }
+    return path;
+  };
+
+  // Handle same-link click for refresh
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    const currentPath = normalizePath(location.pathname);
+    const targetPath = normalizePath(path);
+
+    console.log(`[Navbar] Check refresh: current='${currentPath}', target='${targetPath}' (raw: '${path}')`);
+
+    if (currentPath === targetPath) {
+      e.preventDefault(); // Prevent default navigation since we are already here
+      console.log(`[Navbar] Same link clicked (${path}), requesting refresh...`);
+      window.dispatchEvent(new Event('refresh-data'));
+    }
+    setMobileOpen(false); // Close mobile menu if open
+  };
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       // Close Cart if clicked outside
       if (cartRef.current && !cartRef.current.contains(e.target as Node)) {
-        // Also ensure not clicking the toggle button itself if it was separate, 
-        // but here the logic is simple. The user asked for "mobile sidebar", so focusing on that.
-        // (Actually, the cart toggle logic might be slightly buggy if the toggle button is outside the ref, 
-        // but I shouldn't change existing behavior unless necessary. The user asked ONLY for mobile sidebar fix.)
         setCartOpen(false);
       }
 
@@ -149,7 +194,7 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
       setSuccessMsg("Order sent to Google Sheet!");
       setCart([]);
       setCartOpen(false);
-      setTimeout(() => setSuccessMsg(""), 3000);
+      setTimeout(() => setSuccessMsg(""), 1500);
     } catch (err) {
       console.error(err);
       alert("Error sending order!");
@@ -191,6 +236,7 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
               <NavLink
                 key={item.path}
                 to={item.path}
+                onClick={(e) => handleLinkClick(e, item.path)}
                 className={({ isActive }) =>
                   `font-semibold tracking-wide ${isActive ? "underline underline-offset-4" : ""
                   }`
@@ -391,7 +437,7 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
               <NavLink
                 key={item.path}
                 to={item.path}
-                onClick={() => setMobileOpen(false)}
+                onClick={(e) => handleLinkClick(e, item.path)}
                 className={({ isActive }) =>
                   `block px-4 py-2 rounded text-white text-base font-medium hover:bg-amber-600 ${isActive ? "bg-amber-700" : ""
                   }`
