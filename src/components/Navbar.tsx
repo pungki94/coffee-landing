@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Product } from "../types/product";
+import { fetchMenuFromSpreadsheet, MenuItem } from "../services/spreadsheetService";
 
 interface CartItem extends Product {
   qty: number;
@@ -9,22 +10,71 @@ interface CartItem extends Product {
 interface NavbarProps {
   cart: CartItem[];
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  isAuthenticated: boolean;
+  onLogout: () => void;
 }
 
-const navItems = [
-  { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
-  { name: "Shop", path: "/shop" },
-  { name: "Contact", path: "/contact" },
+// Default menu sebagai fallback
+const defaultMenu: MenuItem[] = [
+  { name: "Home", path: "/", order: 1 },
+  { name: "About", path: "/about", order: 2 },
+  { name: "Shop", path: "/shop", order: 3 },
+  { name: "Contact", path: "/contact", order: 4 },
 ];
 
-export default function Navbar({ cart, setCart }: NavbarProps) {
+export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: NavbarProps) {
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenu);
 
   const cartRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Fetch menu from spreadsheet
+  useEffect(() => {
+    const loadMenu = async () => {
+      // Try to load from localStorage first
+      const cachedMenu = localStorage.getItem('navbar_menu');
+      const cacheTimestamp = localStorage.getItem('navbar_menu_timestamp');
+
+      // Check if cache is valid (less than 1 hour old)
+      const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
+      const cacheValid = cacheAge < 60 * 60 * 1000; // 1 hour
+
+      if (cachedMenu && cacheValid) {
+        // Use cached menu immediately for instant load
+        try {
+          const parsedMenu = JSON.parse(cachedMenu);
+          setMenuItems(parsedMenu);
+        } catch (e) {
+          console.error("Error parsing cached menu:", e);
+        }
+      }
+
+      // Fetch from spreadsheet in background (always, to keep cache fresh)
+      try {
+        const data = await fetchMenuFromSpreadsheet();
+        if (data.length > 0) {
+          setMenuItems(data);
+          // Update cache
+          localStorage.setItem('navbar_menu', JSON.stringify(data));
+          localStorage.setItem('navbar_menu_timestamp', Date.now().toString());
+        } else if (!cachedMenu) {
+          // Only use default menu if no cache and no data from spreadsheet
+          setMenuItems(defaultMenu);
+        }
+      } catch (error) {
+        console.error("Error loading menu:", error);
+        if (!cachedMenu) {
+          // Only use default menu if no cache available
+          setMenuItems(defaultMenu);
+        }
+      }
+    };
+    loadMenu();
+  }, []);
 
   const toggleMobile = () => setMobileOpen((v) => !v);
   const toggleCart = () => setCartOpen((v) => !v);
@@ -137,9 +187,9 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex gap-10 items-center text-lg md:text-xl">
-            {navItems.map((item) => (
+            {menuItems.map((item) => (
               <NavLink
-                key={item.name}
+                key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
                   `font-semibold tracking-wide ${isActive ? "underline underline-offset-4" : ""
@@ -180,6 +230,23 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                 </span>
               )}
             </button>
+
+            {/* LOGIN/LOGOUT BUTTON (DESKTOP) */}
+            {isAuthenticated ? (
+              <button
+                onClick={onLogout}
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition font-semibold text-sm"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 transition font-semibold text-sm"
+              >
+                Login
+              </button>
+            )}
           </div>
 
           {/* MOBILE ICONS */}
@@ -214,6 +281,23 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
                 </span>
               )}
             </button>
+
+            {/* LOGIN/LOGOUT BUTTON (MOBILE) */}
+            {isAuthenticated ? (
+              <button
+                onClick={onLogout}
+                className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 transition font-semibold text-xs"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/login")}
+                className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 transition font-semibold text-xs"
+              >
+                Login
+              </button>
+            )}
 
             {/* HAMBURGER */}
             <button
@@ -303,7 +387,7 @@ export default function Navbar({ cart, setCart }: NavbarProps) {
         {/* MOBILE MENU */}
         {mobileOpen && (
           <div ref={mobileMenuRef} className="md:hidden bg-[#4B2E0E] rounded-lg mt-2 p-4 space-y-2">
-            {navItems.map((item) => (
+            {menuItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}

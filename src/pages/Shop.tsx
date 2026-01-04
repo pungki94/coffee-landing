@@ -1,7 +1,103 @@
 import React, { useState, useEffect } from "react";
-import images from "../constants/coffeeImages";
 import { Product } from "../types/product";
 import { useLocation } from "react-router-dom";
+import { fetchProductsFromSpreadsheet } from "../services/spreadsheetService";
+import coffeeImages from "../constants/coffeeImages";
+
+// Helper function to resolve image path
+const getImagePath = (imageName: string): string => {
+  if (!imageName) return '';
+
+  const cleanName = imageName.trim();
+
+  // If it's already a full URL (http/https), return as is
+  if (cleanName.startsWith('http://') || cleanName.startsWith('https://')) {
+    // Helper to convert Google Drive shareable links to direct image links
+    if (cleanName.includes('drive.google.com')) {
+      const idMatch = cleanName.match(/\/d\/([\w-]+)|id=([\w-]+)/);
+      if (idMatch) {
+        const id = idMatch[1] || idMatch[2];
+        return `https://lh3.googleusercontent.com/d/${id}`;
+      }
+    }
+    return cleanName;
+  }
+
+  const lowerName = cleanName.toLowerCase();
+
+  // Define manual aliases for spelling variations or specific overrides
+  const manualAliases: { [key: string]: string } = {
+    'sumatera': 'sumatra',
+    'columbian': 'colombian', // Spelling fix
+    'kopi': 'espresso',       // Generic coffee alias
+  };
+
+  // Helper to find image in coffeeImages object
+  const findImage = (key: string) => {
+    return (coffeeImages as any)[key];
+  };
+
+  // 1. Check manual aliases (fuzzy match)
+  for (const alias of Object.keys(manualAliases)) {
+    // Check if input contains the alias (e.g. "Columbian Supremo" contains "columbian")
+    if (lowerName.includes(alias)) {
+      const targetKey = manualAliases[alias];
+      const img = findImage(targetKey);
+      if (img) return img;
+    }
+  }
+
+  // 2. Check coffeeImages keys (exact & fuzzy)
+  const keys = Object.keys(coffeeImages);
+
+  // 2a. Exact match or match with .png
+  for (const key of keys) {
+    if (lowerName === key || lowerName === `${key}.png`) {
+      return findImage(key);
+    }
+  }
+
+  // 2b. Partial match (if input contains the image key name)
+  // e.g. "Ethiopian Yirgacheffe" contains "ethiopian"
+  for (const key of keys) {
+    if (lowerName.includes(key)) {
+      return findImage(key);
+    }
+  }
+
+  // 3. Fallback: Try to use the filename from public/images
+  if (lowerName.match(/\.(png|jpg|jpeg|webp)$/)) {
+    return `/images/${cleanName}`;
+  } else {
+    return `/images/${cleanName}.png`;
+  }
+};
+
+const ProductImage: React.FC<{ src: string; alt: string; className?: string }> = ({ src, alt, className }) => {
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setError(false);
+  }, [src]);
+
+  if (!src || error) {
+    return (
+      <div className={`${className} bg-amber-50 flex flex-col items-center justify-center text-amber-800/50`}>
+        <span className="text-4xl mb-2">☕</span>
+        <span className="text-sm font-medium">No Image</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setError(true)}
+    />
+  );
+};
 
 interface CartItem extends Product {
   qty: number;
@@ -12,44 +108,58 @@ interface ShopProps {
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 }
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Guatemalan Antigua",
-    price: 13.99,
-    image: images.guatemalan,
-    description: "Smooth and complex with chocolate and spice notes.",
-    category: "Single Origin",
-  },
-  {
-    id: 2,
-    name: "Kenya AA",
-    price: 16.99,
-    image: images.kenya,
-    description: "Bright acidity with berry and citrus notes.",
-    category: "Single Origin",
-  },
-  {
-    id: 3,
-    name: "Espresso Blend",
-    price: 14.99,
-    image: images.espresso,
-    description: "Bold and rich with caramel and nutty notes.",
-    category: "Blends",
-  },
-  {
-    id: 4,
-    name: "Decaf Colombian",
-    price: 12.99,
-    image: images.decaf,
-    description: "Smooth and mild with chocolate notes.",
-    category: "Decaf",
-  },
-];
-
 const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
   const [filter, setFilter] = useState<string>("All Products");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState<boolean>(true);
+  const [errorProducts, setErrorProducts] = useState<string>("");
   const location = useLocation();
+
+  const fetchProducts = async (force: boolean = false) => {
+    // Try to load from localStorage first if not forcing
+    if (!force) {
+      const cachedProducts = localStorage.getItem('shop_products');
+
+      // Disable cache to ensure fresh data every time
+      const cacheValid = false;
+
+      if (cachedProducts && cacheValid) {
+        try {
+          const parsedProducts = JSON.parse(cachedProducts);
+          if (Array.isArray(parsedProducts)) {
+            setProducts(parsedProducts);
+            setLoadingProducts(false);
+          }
+        } catch (e) {
+          console.error("Cache parse error", e);
+        }
+      }
+    } else {
+      setLoadingProducts(true);
+    }
+
+    try {
+      const data = await fetchProductsFromSpreadsheet();
+      if (data.length > 0) {
+        setProducts(data);
+        localStorage.setItem('shop_products', JSON.stringify(data));
+        localStorage.setItem('shop_products_timestamp', Date.now().toString());
+        setLoadingProducts(false);
+      }
+    } catch (err) {
+      console.error(err);
+      if (force) setErrorProducts("Failed to fetch fresh data");
+    } finally {
+      if (force) setLoadingProducts(false);
+    }
+  };
+
+  // Fetch products from spreadsheet
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // ... (rest of code)
 
   // Apply category from URL query string
   useEffect(() => {
@@ -163,58 +273,70 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
         <h1 className="text-2xl md:text-4xl font-bold text-center mb-6 md:mb-10">Our Coffee Selection</h1>
 
         {/* FILTER */}
-        <div className="flex flex-wrap gap-2 md:gap-4 justify-center mb-6 md:mb-10">
-          {["All Products", "Single Origin", "Blends", "Decaf"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-4 py-2 rounded font-medium transition ${filter === cat ? "bg-amber-700 text-white" : "bg-white text-[#4B2E0E] hover:bg-amber-200"
-                }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        {!loadingProducts && !errorProducts && (
+          <div className="flex flex-wrap gap-2 md:gap-4 justify-center mb-6 md:mb-10">
+            {["All Products", ...Array.from(new Set(products.map(p => p.category)))].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setFilter(cat)}
+                className={`px-4 py-2 rounded font-medium transition ${filter === cat ? "bg-amber-700 text-white" : "bg-white text-[#4B2E0E] hover:bg-amber-200"
+                  }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* LOADING STATE */}
+        {loadingProducts && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-amber-700 mb-4"></div>
+            <p className="text-lg font-semibold">Loading products from spreadsheet...</p>
+          </div>
+        )}
+
+        {/* ERROR STATE */}
+        {errorProducts && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg">
+              <p className="font-bold mb-2">Error Loading Products</p>
+              <p>{errorProducts}</p>
+            </div>
+          </div>
+        )}
 
         {/* PRODUCT GRID */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition scroll-mt-32"
-              id={
-                product.name === "Guatemalan Antigua"
-                  ? "guatemalan"
-                  : product.name === "Kenya AA"
-                    ? "kenya"
-                    : product.name === "Espresso Blend"
-                      ? "espresso"
-                      : product.name === "Decaf Colombian"
-                        ? "decaf"
-                        : undefined
-              }
-            >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-40 md:h-52 object-cover"
-              />
-              <div className="p-3 md:p-4">
-                <h3 className="font-bold text-sm md:text-xl mb-1 md:mb-2 leading-tight">{product.name}</h3>
-                <p className="text-gray-700 text-xs md:text-sm mb-2 md:mb-3">{product.description}</p>
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-                  <span className="font-bold text-sm md:text-lg">${product.price.toFixed(2)}</span>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="bg-amber-700 text-white px-3 py-1.5 rounded text-xs md:text-sm hover:bg-amber-800 transition w-full md:w-auto"
-                  >
-                    Add to Cart
-                  </button>
+        {!loadingProducts && !errorProducts && (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition scroll-mt-32"
+                id={`product-${product.id}`}
+              >
+                <ProductImage
+                  src={product.image ? getImagePath(product.image) : ''}
+                  alt={product.name}
+                  className="w-full h-40 md:h-52 object-cover"
+                />
+                <div className="p-3 md:p-4">
+                  <h3 className="font-bold text-sm md:text-xl mb-1 md:mb-2 leading-tight">{product.name}</h3>
+                  <p className="text-gray-700 text-xs md:text-sm mb-2 md:mb-3">{product.description}</p>
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+                    <span className="font-bold text-sm md:text-lg">${product.price.toFixed(2)}</span>
+                    <button
+                      onClick={() => addToCart(product)}
+                      className="bg-amber-700 text-white px-3 py-1.5 rounded text-xs md:text-sm hover:bg-amber-800 transition w-full md:w-auto"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* CART SUMMARY */}
         {cart.length > 0 && (
