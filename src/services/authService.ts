@@ -1,5 +1,5 @@
 // Replace this with your deployed Google Web App URL
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyl4pR2pEZ_xv5JC-jOCu9jYaUfhfJBuEIn8fzGaeUZSuFBi7S9VQXJHyaaz9xWaUFN/exec"
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkCnw37XlYpfiGf2_GLAtHwkRdaeZtlxGiwHBq8v64Yyjf1hRct8XVoJqt92peLV3-/exec"
 
 interface AuthResponse {
     status: 'success' | 'error';
