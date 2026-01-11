@@ -45,7 +45,6 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
         !item.image    // Menu items should not have image (products do)
       );
     };
-
     // Try to load from localStorage first
     if (!force) {
       const cachedMenu = localStorage.getItem('navbar_menu');
