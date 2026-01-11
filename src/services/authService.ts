@@ -21,7 +21,14 @@ export const authService = {
     },
 
     async forgotPassword(email: string): Promise<AuthResponse> {
-        return this.post({ action: 'forgot_password', email });
+        // Construct the reset link based on the current location
+        // This ensures it points to the correct domain and path (e.g., localhost vs GitHub Pages)
+        const baseUrl = window.location.origin + import.meta.env.BASE_URL;
+        // Ensure we don't have double slashes if BASE_URL ends with /
+        const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+        const resetLinkBase = `${cleanBaseUrl}reset-password`;
+
+        return this.post({ action: 'forgot_password', email, resetLinkBase });
     },
 
     async resetPassword(email: string, token: string, newPassword: string): Promise<AuthResponse> {
