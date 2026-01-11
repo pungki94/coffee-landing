@@ -5,8 +5,8 @@ import { fetchProductsFromSpreadsheet } from "../services/spreadsheetService";
 import coffeeImages from "../constants/coffeeImages";
 
 // Helper function to resolve image path
-const getImagePath = (imageName: string): string => {
-  if (!imageName) return '';
+const getImagePath = (imageName: string | any): string => {
+  if (!imageName || typeof imageName !== 'string') return '';
 
   const cleanName = imageName.trim();
 
@@ -115,20 +115,44 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
   const [errorProducts, setErrorProducts] = useState<string>("");
   const location = useLocation();
 
+  // Helper to safely parse product data
+  const normalizeProduct = (item: any): Product => {
+    // Ensure item is an object
+    if (!item || typeof item !== 'object') return item;
+
+    const safeItem = { ...item };
+
+    // Ensure price is a number
+    if (typeof safeItem.price === 'string') {
+      // Remove generic currency symbols and whitespace, then parse
+      const parsed = parseFloat(safeItem.price.replace(/[^0-9.-]/g, ''));
+      safeItem.price = isNaN(parsed) ? 0 : parsed;
+    } else if (typeof safeItem.price !== 'number') {
+      // Fallback for null/undefined/other types
+      safeItem.price = 0;
+    }
+
+    return safeItem;
+  };
+
   const fetchProducts = async (force: boolean = false) => {
     // Try to load from localStorage first if not forcing
     if (!force) {
       const cachedProducts = localStorage.getItem('shop_products');
 
-      // Disable cache to ensure fresh data every time
+      // Disable cache to ensure fresh data every time (as per previous logic)
+      // Note: If we want to re-enable cache later, change this back to true
       const cacheValid = false;
 
       if (cachedProducts && cacheValid) {
         try {
           const parsedProducts = JSON.parse(cachedProducts);
           if (Array.isArray(parsedProducts)) {
-            setProducts(parsedProducts);
+            // Normalize cached data too, just in case old bad data is stuck there
+            const validCached = parsedProducts.map(normalizeProduct);
+            setProducts(validCached);
             setLoadingProducts(false);
+            return; // Exit if cache was used
           }
         } catch (e) {
           console.error("Cache parse error", e);
@@ -140,10 +164,19 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
 
     try {
       const data = await fetchProductsFromSpreadsheet();
-      if (data.length > 0) {
-        setProducts(data);
-        localStorage.setItem('shop_products', JSON.stringify(data));
+      if (Array.isArray(data) && data.length > 0) {
+        // Validation: Filter out nulls or invalid items and Normalize
+        const validData = data
+          .filter(item => item && typeof item === 'object' && item.id)
+          .map(normalizeProduct);
+
+        setProducts(validData);
+        localStorage.setItem('shop_products', JSON.stringify(validData));
         localStorage.setItem('shop_products_timestamp', Date.now().toString());
+        setLoadingProducts(false);
+      } else {
+        // Handle empty but successful response
+        setProducts([]);
         setLoadingProducts(false);
       }
     } catch (err) {
@@ -157,6 +190,14 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
   // Fetch products from spreadsheet
   useEffect(() => {
     fetchProducts();
+
+    const handleRefresh = () => {
+      console.log("Shop refresh triggered...");
+      fetchProducts(true);
+    };
+
+    window.addEventListener('refresh-data', handleRefresh);
+    return () => window.removeEventListener('refresh-data', handleRefresh);
   }, []);
 
   // ... (rest of code)
@@ -176,7 +217,7 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
       if (element) {
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 300);
+        }, 100);
       }
     } else {
       window.scrollTo(0, 0);
@@ -242,7 +283,7 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
       );
       setSuccessMsg("Order sent to Google Sheet!");
       setCart([]); // Optional: clear cart on success
-      setTimeout(() => setSuccessMsg(""), 3000);
+      setTimeout(() => setSuccessMsg(""), 1500);
     } catch (err) {
       console.error(err);
       alert("Error sending order!");
@@ -275,7 +316,7 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
         {/* FILTER */}
         {!loadingProducts && !errorProducts && (
           <div className="flex flex-wrap gap-2 md:gap-4 justify-center mb-6 md:mb-10">
-            {["All Products", ...Array.from(new Set(products.map(p => p.category)))].map((cat) => (
+            {["All Products", ...Array.from(new Set(products.map(p => p?.category).filter(Boolean)))].map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}

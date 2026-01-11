@@ -12,13 +12,13 @@ interface SpreadsheetResponse {
     timestamp?: string;
 }
 
-const SPREADSHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyx7VBEo-tXeTq1fdnHtNFesM8YHxc53v5XiidRM9ZxkM7YgVph_7H5xXiGYpRcU4pe/exec';
+const SPREADSHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyOhc4jCfJvcQ9eSK5WMWOTmgGu_DtDHLrfcbV0CU-PIUM1buDsaHIMNY4mpseAy6q4/exec';
 
 // Main function to fetch all data from spreadsheet
-export const fetchDataFromSpreadsheet = async (): Promise<SpreadsheetResponse> => {
+export const fetchDataFromSpreadsheet = async (sheet: string = 'products'): Promise<SpreadsheetResponse> => {
     try {
-        // Append timestamp to prevent caching
-        const response = await fetch(`${SPREADSHEET_API_URL}?t=${Date.now()}`);
+        // Append timestamp to prevent caching and sheet parameter
+        const response = await fetch(`${SPREADSHEET_API_URL}?sheet=${sheet}&t=${Date.now()}`);
         if (!response.ok) {
             throw new Error('Failed to fetch data from spreadsheet');
         }
@@ -26,7 +26,13 @@ export const fetchDataFromSpreadsheet = async (): Promise<SpreadsheetResponse> =
 
         // Handle both old format (array) and new format (object)
         if (Array.isArray(data)) {
-            // Old format - just products array
+            // If the script returns an array directly (legacy or simple mode)
+            // We need to guess what it is based on the requested sheet or content
+            // For now, if we asked for 'menu' and got an array, we'll try to treat it as menu items
+            // But to be safe vs the "products array" bug, we rely on the object format usually.
+            // If the user uses OUR new script, it returns { products: [], menu: [] } or similar object.
+
+            // Fallback for legacy script:
             return { products: data, menu: [] };
         }
 
@@ -44,12 +50,12 @@ export const fetchDataFromSpreadsheet = async (): Promise<SpreadsheetResponse> =
 
 // Fetch only products (backward compatibility)
 export const fetchProductsFromSpreadsheet = async (): Promise<Product[]> => {
-    const data = await fetchDataFromSpreadsheet();
+    const data = await fetchDataFromSpreadsheet('products');
     return data.products;
 };
 
 // Fetch only menu items
 export const fetchMenuFromSpreadsheet = async (): Promise<MenuItem[]> => {
-    const data = await fetchDataFromSpreadsheet();
+    const data = await fetchDataFromSpreadsheet('menu');
     return data.menu;
 };
