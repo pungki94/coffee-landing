@@ -56,11 +56,11 @@ const Login = ({ onLogin }: LoginProps) => {
 
         {/* Left Side - Image (Decaf Coffee) */}
         {/* Mobile: Top, Auto height, Contain. Desktop: Left, Cover, Full height */}
-        <div className="w-full md:w-[45%] relative shrink-0">
+        <div className="w-full h-[25vh] md:h-auto md:w-[45%] relative shrink-0">
           <img
             src={decafImg}
             alt="Coffee Background"
-            className="w-full h-auto object-contain md:h-full md:object-cover"
+            className="w-full h-full object-cover object-top"
           />
           <div className="title-overlay absolute inset-0 bg-transparent"></div>
           {/* Mobile Overlay remove? Register doesn't have one usually, but let's keep it clean or minimal if needed. Register had none. */}
@@ -68,14 +68,14 @@ const Login = ({ onLogin }: LoginProps) => {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full md:w-[55%] bg-[#6F4E37] text-white p-4 md:p-8 flex flex-col justify-center items-center shrink-0">
+        <div className="w-full md:w-[55%] bg-[#6F4E37] text-white p-4 md:p-8 flex flex-col justify-center items-center shrink-0 min-h-[50vh]">
 
           {/* Logo Area */}
           <div className="flex flex-col items-center mb-1 md:mb-3 pt-2 md:pt-0">
             <div className="bg-white/10 p-1.5 rounded-full mb-1">
               <svg
-                width="20"
-                height="20"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -91,11 +91,11 @@ const Login = ({ onLogin }: LoginProps) => {
                 <line x1="14" y1="2" x2="14" y2="4"></line>
               </svg>
             </div>
-            <h1 className="text-base font-bold tracking-wide">Cafe Beans</h1>
+            <h1 className="text-sm md:text-base font-bold tracking-wide">Cafe Beans</h1>
           </div>
 
           <div className="w-full max-w-sm">
-            <h2 className="text-lg text-center mb-2 font-light leading-snug text-gray-200">
+            <h2 className="text-base md:text-lg text-center mb-1 md:mb-2 font-light leading-snug text-gray-200">
               Welcome Back, Please login<br />to your account
             </h2>
 

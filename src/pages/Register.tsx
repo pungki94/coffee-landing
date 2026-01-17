@@ -74,11 +74,11 @@ const Register: React.FC = () => {
             <div className="relative z-10 w-full max-w-[360px] rounded-2xl overflow-hidden shadow-xl">
 
                 {/* IMAGE — SAME AS LOGIN MOBILE (NO CROP) */}
-                <div className="w-full">
+                <div className="w-full h-[25vh]">
                     <img
                         src={decafImg}
                         alt="Decaf Coffee"
-                        className="w-full h-auto object-contain"
+                        className="w-full h-full object-cover object-top"
                     />
                 </div>
 
