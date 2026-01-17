@@ -1,6 +1,7 @@
 // Replace this with your deployed Google Web App URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7KCDgx04kkyl8_4lJIwFL3Hx8m3V2Ypsq6fcsmc3ugQeRO-W9FSPgVc6Te7xHha9l2A/exec"
 
+
 interface AuthResponse {
     status: 'success' | 'error';
     message?: string;
@@ -22,7 +23,14 @@ export const authService = {
     },
 
     async forgotPassword(email: string): Promise<AuthResponse> {
-        return this.post({ action: 'forgot_password', email });
+        // Construct the reset link based on the current location
+        // This ensures it points to the correct domain and path (e.g., localhost vs GitHub Pages)
+        const baseUrl = window.location.origin + import.meta.env.BASE_URL;
+        // Ensure we don't have double slashes if BASE_URL ends with /
+        const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+        const resetLinkBase = `${cleanBaseUrl}reset-password`;
+
+        return this.post({ action: 'forgot_password', email, resetLinkBase });
     },
 
     async resetPassword(email: string, token: string, newPassword: string): Promise<AuthResponse> {
