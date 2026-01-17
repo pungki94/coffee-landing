@@ -5,13 +5,8 @@ import { fetchProductsFromSpreadsheet } from "../services/spreadsheetService";
 import coffeeImages from "../constants/coffeeImages";
 
 // Helper function to resolve image path
-<<<<<<< HEAD
 const getImagePath = (imageName: string | any): string => {
   if (!imageName || typeof imageName !== 'string') return '';
-=======
-const getImagePath = (imageName: string): string => {
-  if (!imageName) return '';
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
 
   const cleanName = imageName.trim();
 
@@ -120,7 +115,6 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
   const [errorProducts, setErrorProducts] = useState<string>("");
   const location = useLocation();
 
-<<<<<<< HEAD
   // Helper to safely parse product data
   const normalizeProduct = (item: any): Product => {
     // Ensure item is an object
@@ -141,35 +135,24 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
     return safeItem;
   };
 
-=======
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
   const fetchProducts = async (force: boolean = false) => {
     // Try to load from localStorage first if not forcing
     if (!force) {
       const cachedProducts = localStorage.getItem('shop_products');
 
-<<<<<<< HEAD
       // Disable cache to ensure fresh data every time (as per previous logic)
       // Note: If we want to re-enable cache later, change this back to true
-=======
-      // Disable cache to ensure fresh data every time
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
       const cacheValid = false;
 
       if (cachedProducts && cacheValid) {
         try {
           const parsedProducts = JSON.parse(cachedProducts);
           if (Array.isArray(parsedProducts)) {
-<<<<<<< HEAD
             // Normalize cached data too, just in case old bad data is stuck there
             const validCached = parsedProducts.map(normalizeProduct);
             setProducts(validCached);
             setLoadingProducts(false);
             return; // Exit if cache was used
-=======
-            setProducts(parsedProducts);
-            setLoadingProducts(false);
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
           }
         } catch (e) {
           console.error("Cache parse error", e);
@@ -181,7 +164,6 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
 
     try {
       const data = await fetchProductsFromSpreadsheet();
-<<<<<<< HEAD
       if (Array.isArray(data) && data.length > 0) {
         // Validation: Filter out nulls or invalid items and Normalize
         const validData = data
@@ -196,13 +178,6 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
         // Handle empty but successful response
         setProducts([]);
         setLoadingProducts(false);
-=======
-      if (data.length > 0) {
-        setProducts(data);
-        localStorage.setItem('shop_products', JSON.stringify(data));
-        localStorage.setItem('shop_products_timestamp', Date.now().toString());
-        setLoadingProducts(false);
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
       }
     } catch (err) {
       console.error(err);
@@ -341,11 +316,7 @@ const Shop: React.FC<ShopProps> = ({ cart, setCart }) => {
         {/* FILTER */}
         {!loadingProducts && !errorProducts && (
           <div className="flex flex-wrap gap-2 md:gap-4 justify-center mb-6 md:mb-10">
-<<<<<<< HEAD
             {["All Products", ...Array.from(new Set(products.map(p => p?.category).filter(Boolean)))].map((cat) => (
-=======
-            {["All Products", ...Array.from(new Set(products.map(p => p.category)))].map((cat) => (
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}

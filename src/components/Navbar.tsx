@@ -22,7 +22,6 @@ const defaultMenu: MenuItem[] = [
   { name: "Contact", path: "/contact", order: 4 },
 ];
 
-<<<<<<< HEAD
 // Helper to validate menu items
 const isValidMenu = (items: any[]): boolean => {
   if (!Array.isArray(items)) return false;
@@ -34,30 +33,15 @@ const isValidMenu = (items: any[]): boolean => {
   );
 };
 
-=======
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
 export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: NavbarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-<<<<<<< HEAD
 
   // Use lazy initialization to load from localStorage immediately
   const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
     try {
-=======
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenu);
-
-  const cartRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
-  const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
-
-  // Fetch menu from spreadsheet
-  const loadMenu = async (force: boolean = false) => {
-    // Try to load from localStorage first
-    if (!force) {
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
       const cachedMenu = localStorage.getItem('navbar_menu');
       const cacheTimestamp = localStorage.getItem('navbar_menu_timestamp');
 
@@ -66,7 +50,6 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
       const cacheValid = cacheAge < 60 * 60 * 1000; // 1 hour
 
       if (cachedMenu && cacheValid) {
-<<<<<<< HEAD
         const parsedMenu = JSON.parse(cachedMenu);
         if (isValidMenu(parsedMenu)) {
           return parsedMenu;
@@ -87,22 +70,10 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
     // If we already loaded from cache during init, and not forcing, we can skip
     // BUT we still want to fetch in background to ensure freshness.
     // The previous logic checked cache again here. We can simplify.
-=======
-        // Use cached menu immediately for instant load
-        try {
-          const parsedMenu = JSON.parse(cachedMenu);
-          setMenuItems(parsedMenu);
-        } catch (e) {
-          console.error("Error parsing cached menu:", e);
-        }
-      }
-    }
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
 
     // Fetch from spreadsheet in background (always, to keep cache fresh)
     try {
       const data = await fetchMenuFromSpreadsheet();
-<<<<<<< HEAD
       if (isValidMenu(data) && data.length > 0) {
         // Only update state if data is different? React handles this optimization usually,
         // but let's just set it.
@@ -115,25 +86,11 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
     } catch (error) {
       console.error("Error loading menu:", error);
       // If error, we just keep whatever we have (cache or default)
-=======
-      if (data.length > 0) {
-        setMenuItems(data);
-        // Update cache
-        localStorage.setItem('navbar_menu', JSON.stringify(data));
-        localStorage.setItem('navbar_menu_timestamp', Date.now().toString());
-      } else if (!force) {
-        // Only use default menu if no cache and no data from spreadsheet
-        const cachedMenu = localStorage.getItem('navbar_menu');
-        if (!cachedMenu) setMenuItems(defaultMenu);
-      }
-    } catch (error) {
-      console.error("Error loading menu:", error);
       const cachedMenu = localStorage.getItem('navbar_menu');
-      if (!cachedMenu && !force) {
+      if (!cachedMenu) {
         // Only use default menu if no cache available
         setMenuItems(defaultMenu);
       }
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
     }
   };
 
@@ -143,11 +100,7 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
     // Listen for global refresh event
     const handleRefresh = () => {
       console.log("Global refresh triggered - reloading menu...");
-<<<<<<< HEAD
       loadMenu();
-=======
-      loadMenu(true);
->>>>>>> b1c94699c7d585c98ba9e703fc97994f691d4379
     };
 
     window.addEventListener('refresh-data', handleRefresh);
