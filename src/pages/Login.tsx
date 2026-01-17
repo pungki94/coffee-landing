@@ -68,10 +68,10 @@ const Login = ({ onLogin }: LoginProps) => {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full md:w-[55%] bg-[#6F4E37] text-white p-5 md:p-8 flex flex-col justify-center items-center shrink-0">
+        <div className="w-full md:w-[55%] bg-[#6F4E37] text-white p-4 md:p-8 flex flex-col justify-center items-center shrink-0">
 
           {/* Logo Area */}
-          <div className="flex flex-col items-center mb-3 pt-2 md:pt-0">
+          <div className="flex flex-col items-center mb-1 md:mb-3 pt-2 md:pt-0">
             <div className="bg-white/10 p-1.5 rounded-full mb-1">
               <svg
                 width="20"
@@ -95,11 +95,11 @@ const Login = ({ onLogin }: LoginProps) => {
           </div>
 
           <div className="w-full max-w-sm">
-            <h2 className="text-lg text-center mb-4 font-light leading-snug text-gray-200">
+            <h2 className="text-lg text-center mb-2 font-light leading-snug text-gray-200">
               Welcome Back, Please login<br />to your account
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-2">
 
               {/* Email Input */}
               <div className="space-y-1">
@@ -110,7 +110,7 @@ const Login = ({ onLogin }: LoginProps) => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="jubaer@gmail.com"
-                  className="w-full bg-[#2A2A2A] text-gray-200 px-3 py-2.5 rounded-lg border border-transparent focus:border-gray-500 focus:outline-none transition-colors placeholder-gray-500 text-sm"
+                  className="w-full bg-[#2A2A2A] text-gray-200 px-3 py-2 rounded-lg border border-transparent focus:border-gray-500 focus:outline-none transition-colors placeholder-gray-500 text-sm"
                 />
               </div>
 
@@ -124,7 +124,7 @@ const Login = ({ onLogin }: LoginProps) => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder="••••••••"
-                    className="w-full bg-[#2A2A2A] text-gray-200 px-3 py-2.5 rounded-lg border border-transparent focus:border-gray-500 focus:outline-none transition-colors placeholder-gray-500 text-sm"
+                    className="w-full bg-[#2A2A2A] text-gray-200 px-3 py-2 rounded-lg border border-transparent focus:border-gray-500 focus:outline-none transition-colors placeholder-gray-500 text-sm"
                   />
                   <button
                     type="button"
@@ -154,7 +154,7 @@ const Login = ({ onLogin }: LoginProps) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full font-bold text-base py-3 rounded-xl shadow-lg transition-transform active:scale-95 ${isLoading
+                  className={`w-full font-bold text-base py-2.5 rounded-xl shadow-lg transition-transform active:scale-95 ${isLoading
                     ? "bg-gray-400 text-gray-700 cursor-not-allowed"
                     : "bg-white text-black hover:bg-gray-100"
                     }`}
@@ -174,7 +174,7 @@ const Login = ({ onLogin }: LoginProps) => {
               </div>
             </form>
 
-            <div className="mt-4 text-center text-xs text-gray-400">
+            <div className="mt-2 text-center text-xs text-gray-400">
               Don't have an account? <Link to="/register" className="text-white hover:underline font-bold ml-1">Sign up</Link>
             </div>
 

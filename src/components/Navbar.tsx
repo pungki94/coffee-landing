@@ -38,6 +38,7 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenu);
 
   const cartRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -45,16 +46,6 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
 
   // Fetch menu from spreadsheet
   const loadMenu = async (force: boolean = false) => {
-    // Helper to validate menu items
-    const isValidMenu = (items: any[]): boolean => {
-      if (!Array.isArray(items)) return false;
-      return items.every(item =>
-        item.name &&
-        item.path &&
-        !item.price && // Menu items should not have price (products do)
-        !item.image    // Menu items should not have image (products do)
-      );
-    };
 
     // Try to load from localStorage first
     if (!force) {
