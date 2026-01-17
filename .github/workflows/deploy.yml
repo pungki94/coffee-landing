@@ -2,7 +2,14 @@ name: Deploy Vite to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+
+# 🔴 WAJIB ADA DI LEVEL ROOT
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -25,18 +32,14 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: dist
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
