@@ -38,7 +38,20 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(defaultMenu);
+
+  // Fix startup delay by lazy loading from localStorage
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
+    try {
+      const cached = localStorage.getItem('navbar_menu');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (isValidMenu(parsed)) return parsed;
+      }
+    } catch (e) {
+      console.error("Error parsing menu cache:", e);
+    }
+    return defaultMenu;
+  });
 
   const cartRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -47,25 +60,17 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
   // Fetch menu from spreadsheet
   const loadMenu = async (force: boolean = false) => {
 
-    // Try to load from localStorage first
+    // Try to load from localStorage first if not forced
+    // Note: We already loaded via lazy init, but this handles explicit 'loadMenu' calls later
     if (!force) {
       const cachedMenu = localStorage.getItem('navbar_menu');
-      const cacheTimestamp = localStorage.getItem('navbar_menu_timestamp');
 
-      // Check if cache is valid (less than 1 hour old)
-      const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
-      const cacheValid = cacheAge < 60 * 60 * 1000; // 1 hour
-
-      if (cachedMenu && cacheValid) {
-        // Use cached menu immediately for instant load
+      // Use stale-while-revalidate strategy: always show cache if available, don't wait for fetch
+      if (cachedMenu) {
         try {
           const parsedMenu = JSON.parse(cachedMenu);
           if (isValidMenu(parsedMenu)) {
             setMenuItems(parsedMenu);
-          } else {
-            // Invalid cache (likely products from previous bug), clear it
-            localStorage.removeItem('navbar_menu');
-            setMenuItems(defaultMenu);
           }
         } catch (e) {
           console.error("Error parsing cached menu:", e);
