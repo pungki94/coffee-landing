@@ -72,6 +72,7 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
         }
       }
     }
+
     // Fetch from spreadsheet in background (always, to keep cache fresh)
     try {
       const data = await fetchMenuFromSpreadsheet();
@@ -80,15 +81,12 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
         // Update cache only if valid
         localStorage.setItem('navbar_menu', JSON.stringify(data));
         localStorage.setItem('navbar_menu_timestamp', Date.now().toString());
-      } else if (!force) {
-        // Only use default menu if no cache and no data from spreadsheet
-        const cachedMenu = localStorage.getItem('navbar_menu');
-        if (!cachedMenu) setMenuItems(defaultMenu);
       }
     } catch (error) {
       console.error("Error loading menu:", error);
+      // If error, we just keep whatever we have (cache or default)
       const cachedMenu = localStorage.getItem('navbar_menu');
-      if (!cachedMenu && !force) {
+      if (!cachedMenu) {
         // Only use default menu if no cache available
         setMenuItems(defaultMenu);
       }
@@ -101,7 +99,7 @@ export default function Navbar({ cart, setCart, isAuthenticated, onLogout }: Nav
     // Listen for global refresh event
     const handleRefresh = () => {
       console.log("Global refresh triggered - reloading menu...");
-      loadMenu(true);
+      loadMenu();
     };
 
     window.addEventListener('refresh-data', handleRefresh);
