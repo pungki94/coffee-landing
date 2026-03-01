@@ -28,6 +28,9 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          VITE_API_URL: https://script.google.com/macros/s/AKfycbyX8rQE-2IUmXiP97dnmq11EdTXJ-xLYHreT7KrWVwpCvlHWhub4AEKYZ_CmREQFHyM8A/exec
+          VITE_GOOGLE_CLIENT_ID: 352132989417-ae3rjrulhqnleffo1ukk1o5en7poii75.apps.googleusercontent.com
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
