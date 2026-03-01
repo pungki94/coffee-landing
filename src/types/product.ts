@@ -1,0 +1,13 @@
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  description: string;
+  category: string;
+  cartId?: string;
+}
+
+export interface CartItem extends Product {
+  qty: number;
+}
